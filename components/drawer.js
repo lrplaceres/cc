@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 
 const drawerWidth = 240;
 
@@ -146,6 +147,35 @@ export default function MiniDrawer({ children }) {
           </DrawerHeader>
           <Divider />
           <List>
+          <ListItem
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={() => router.push("/")}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                title="Tablero"
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <LeaderboardIcon color="primary"/>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Tablero"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+            
             <ListItem
               disablePadding
               sx={{ display: "block" }}

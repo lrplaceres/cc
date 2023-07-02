@@ -1,14 +1,19 @@
-import MiniDrawer from '@/components/drawer'
-import React from 'react'
+import MiniDrawer from "@/components/drawer";
+import Head from "next/head";
 
 function index() {
+ 
+
   return (
     <>
-    <MiniDrawer>
-      index
-    </MiniDrawer>
+      <Head>
+        <title>Tablero</title>
+      </Head>
+      <MiniDrawer>
+       index
+      </MiniDrawer>
     </>
-  )
+  );
 }
 
-export default index
+export default index;

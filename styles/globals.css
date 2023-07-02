@@ -1,3 +1,7 @@
 body {
-    background-color: #e2e4e7;
-  }
+  background-color: #e2e4e7;
+}
+
+.decoration-none {
+  text-decoration: none;
+}

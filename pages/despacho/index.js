@@ -61,11 +61,11 @@ function index({ despachos }) {
                 initialState={{
                   pagination: {
                     paginationModel: {
-                      pageSize: 10,
+                      pageSize: 25,
                     },
                   },
                 }}
-                pageSizeOptions={[10]}
+                pageSizeOptions={[25]}
               />
             </Card>
           </Container>
@@ -73,7 +73,7 @@ function index({ despachos }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
           icon={<SpeedDialIcon />}
         >
           <SpeedDialAction

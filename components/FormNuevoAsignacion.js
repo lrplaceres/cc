@@ -45,6 +45,14 @@ function FormNuevoAsignacion() {
 
   const [entidades, setEntidades] = useState([]);
 
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleChange = ({ target: { name, value } }) => {
     setAsignacion({ ...asignacion, [name]: value });
   };
@@ -52,7 +60,20 @@ function FormNuevoAsignacion() {
   useEffect(() => {
     obtenerCombustibles();
     obtenerEntidades();
+    if (router.query.id) {
+      obtenerEntidad();
+    }
   }, []);
+
+  const obtenerEntidad = async () => {
+    try {
+      const { data } = await axios.get("/api/asignacion/" + router.query.id);
+      setAsignacion(data);
+      setFecha(data.fecha);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
 
   const obtenerCombustibles = async () => {
     try {
@@ -85,6 +106,16 @@ function FormNuevoAsignacion() {
         await axios.post("/api/asignacion", { asignacion, fecha });
         toast.success("Se ha creado la asignacion");
       }
+      setTimeout(() => router.push("/asignacion"), 250);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const eliminarAsignacion = async (id) => {
+    try {
+      await axios.delete(`/api/asignacion/${id}`);
+      toast.success("Se ha eliminado la asignacion");
       setTimeout(() => router.push("/asignacion"), 250);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
@@ -149,7 +180,7 @@ function FormNuevoAsignacion() {
                 value={asignacion.entidad}
                 label="Entidad"
                 onChange={handleChange}
-                sx={{mb:"0.5rem"}}
+                sx={{ mb: "0.5rem" }}
               >
                 {entidades.map((ent, index) => (
                   <MenuItem key={index.toString()} value={ent.id}>
@@ -186,14 +217,58 @@ function FormNuevoAsignacion() {
               variant="contained"
               color="success"
               type="submit"
-              //disabled={!despacho.cantidad || !despacho.combustible || !fecha }
+              disabled={
+                !asignacion.cantidad ||
+                !asignacion.combustible ||
+                !asignacion.entidad ||
+                !fecha
+              }
               startIcon={<DoneIcon />}
             >
               Aceptar
             </Button>
           </form>
         </Card>
+
+        {router.query.id && (
+          <Card sx={{ textAlign: "center", mt: "1.5rem", p: "1rem" }}>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={handleClickOpen}
+            >
+              Eliminar
+            </Button>
+          </Card>
+        )}
       </Container>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+      >
+        <DialogTitle>Eliminar asignación</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Al confirmar esta acción <strong>se borrarán los datos</strong>{" "}
+            relacionados.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => eliminarAsignacion(asignacion.uid)}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

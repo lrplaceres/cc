@@ -36,7 +36,7 @@ const obtenerTodosAsignaciones = async (req, res) => {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT a.uid, a.cantidad, a.fecha, c.nombre as combustible, e.nombre as entidad FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid INNER JOIN entidad e ON a.entidad = e.uid ORDER BY a.fecha DESC, combustible ASC, entidad ASC"
+        "SELECT a.uid as id, a.cantidad, a.fecha, c.nombre as combustible, e.nombre as entidad FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid INNER JOIN entidad e ON a.entidad = e.uid ORDER BY a.fecha DESC, combustible ASC, entidad ASC"
       );
     return res.status(200).json(result);
   } catch (error) {
