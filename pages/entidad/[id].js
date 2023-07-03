@@ -1,15 +1,14 @@
-import FormNuevoEntidad from "@/components/FormNuevoEntidad"
-import MiniDrawer from "@/components/drawer"
-
+import FormNuevoEntidad from "@/components/FormNuevoEntidad";
+import MiniDrawer from "@/components/drawer";
 
 function editar() {
   return (
     <>
-    <MiniDrawer>
+      <MiniDrawer>
         <FormNuevoEntidad />
-    </MiniDrawer>
+      </MiniDrawer>
     </>
-  )
+  );
 }
 
-export default editar
+export default editar;

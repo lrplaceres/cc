@@ -15,61 +15,58 @@ import { useRouter } from "next/router";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
-function index({ entidades }) {
+function index({ usuarios }) {
   const router = useRouter();
 
   const columns = [
     {
-      field: "nombre",
-      headerName: "Nombre",
-      width: 300,
-      //flex: 1,
+      field: "usuario",
+      headerName: "Usuario",
+      width: 150,
       renderCell: (params) => (
-        <Link href={`/entidad/${params.row.id}`} className="decoration-none">
-          {params.row.nombre}
+        <Link href={`/usuario/${params.row.id}`} className="decoration-none">
+          {params.row.activo ? (
+            params.row.usuario
+          ) : (
+            <del>{params.row.usuario}</del>
+          )}
         </Link>
       ),
     },
     {
-      field: "subordinado",
-      headerName: "Subordinado",
-      width: 300,
-      renderCell: (params) => (
-        <Typography variant="body1" color="initial" component="p">
-          {params.row.sub_id ? params.row.subordinado : ""}
-        </Typography>
-      ),
+      field: "nombre",
+      headerName: "Nombre",
+      width: 250,
     },
     {
-      field: "subordinacion",
-      headerName: "Subordinación",
+      field: "rol",
+      headerName: "Rol",
       width: 150,
-      renderCell: (params) => (
-        <Typography variant="body1" color="initial" component="p">
-          {params.row.subordinacion ? <AccountTreeIcon /> : ""}
-        </Typography>
-      ),
+    },
+    {
+      field: "entidad",
+      headerName: "Entidad",
+      width: 250,
     },
   ];
 
   return (
     <>
       <Head>
-        <title>Listado de entidades</title>
+        <title>Usuarios</title>
       </Head>
       <MiniDrawer>
-        {entidades.length === 0 ? (
+        {usuarios.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay despachos disponibles</Alert>
+            <Alert severity="info">No hay usuarios disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
             <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">ENTIDADES</Typography>
+            <Typography textAlign="center" variant="h4" color="initial">USUARIOS</Typography>
               <DataGrid
-                rows={entidades}
+                rows={usuarios}
                 columns={columns}
                 initialState={{
                   pagination: {
@@ -92,7 +89,7 @@ function index({ entidades }) {
           <SpeedDialAction
             icon={<AddBoxIcon />}
             tooltipTitle="Añadir"
-            onClick={() => router.push("/entidad/nuevo")}
+            onClick={() => router.push("/usuario/nuevo")}
           />
         </SpeedDial>
       </MiniDrawer>
@@ -103,12 +100,12 @@ function index({ entidades }) {
 export default index;
 
 export async function getServerSideProps(context) {
-  const { data: entidades } = await axios.get(
-    `${process.env.NEXTAUTH_URL}/api/entidad/subordinacion`
+  const { data: usuarios } = await axios.get(
+    `${process.env.NEXTAUTH_URL}/api/usuario`
   );
   return {
     props: {
-      entidades,
+      usuarios,
     },
   };
 }

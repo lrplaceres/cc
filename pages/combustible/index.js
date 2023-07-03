@@ -7,6 +7,7 @@ import {
   SpeedDialAction,
   SpeedDialIcon,
   Stack,
+  Typography,
 } from "@mui/material";
 import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -41,14 +42,13 @@ function index({ combustibles }) {
       </Head>
       <MiniDrawer>
         {combustibles.length === 0 ? (
-          <Card sx={{ p: "1rem", mb: "0.5rem" }}>
-            <Stack sx={{ width: "100%" }} spacing={2}>
-              <Alert severity="info">No hay combustibles disponibles</Alert>
-            </Stack>
-          </Card>
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="info">No hay combustibles disponibles</Alert>
+          </Stack>
         ) : (
           <Container maxWidth="sm">
-            <Card sx={{ p: "0.5rem" }}>
+            <Card elevation={0}>
+            <Typography textAlign="center" variant="h4" color="initial">COMBUSTIBLES</Typography>
               <DataGrid
                 rows={combustibles}
                 columns={columns}

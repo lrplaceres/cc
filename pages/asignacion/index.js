@@ -42,6 +42,7 @@ function index({ asignaciones }) {
       ),
     },
     {
+      field: "acciones",
       headerName: "Acciones",
       renderCell: (params) => (
         <Link
@@ -62,14 +63,13 @@ function index({ asignaciones }) {
       </Head>
       <MiniDrawer>
         {asignaciones.length === 0 ? (
-          <Card sx={{ p: "1rem", mb: "0.5rem" }}>
-            <Stack sx={{ width: "100%" }} spacing={2}>
-              <Alert severity="info">No hay asignaciones disponibles</Alert>
-            </Stack>
-          </Card>
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="info">No hay asignaciones disponibles</Alert>
+          </Stack>
         ) : (
           <Container maxWidth="md">
-            <Card sx={{ p: "0.5rem" }}>
+            <Card elevation={0}>
+            <Typography textAlign="center" variant="h4" color="initial">ASIGNACIONES</Typography>
               <DataGrid
                 rows={asignaciones}
                 columns={columns}

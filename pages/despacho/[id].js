@@ -1,13 +1,13 @@
-import FormNuevoDespacho from '@/components/FormNuevoDespacho'
-import MiniDrawer from '@/components/drawer'
-import React from 'react'
+import FormNuevoDespacho from "@/components/FormNuevoDespacho";
+import MiniDrawer from "@/components/drawer";
+import React from "react";
 
 function editar() {
   return (
     <MiniDrawer>
-        <FormNuevoDespacho />
+      <FormNuevoDespacho />
     </MiniDrawer>
-  )
+  );
 }
 
-export default editar
+export default editar;

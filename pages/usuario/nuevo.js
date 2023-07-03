@@ -1,11 +1,11 @@
-import FormNuevoCombustible from "@/components/FormNuevoCombustible";
+import FormNuevoUsuario from "@/components/FormNuevoUsuario";
 import MiniDrawer from "@/components/drawer";
 
 function nuevo() {
   return (
     <>
       <MiniDrawer>
-        <FormNuevoCombustible />
+        <FormNuevoUsuario />
       </MiniDrawer>
     </>
   );

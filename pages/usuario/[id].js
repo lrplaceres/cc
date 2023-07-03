@@ -1,12 +1,11 @@
-import FormNuevoCombustible from "@/components/FormNuevoCombustible";
+import FormEditarUsuario from "@/components/FormEditarUsuario";
 import MiniDrawer from "@/components/drawer";
-import React from "react";
 
 function editar() {
   return (
     <>
       <MiniDrawer>
-        <FormNuevoCombustible />
+        <FormEditarUsuario />
       </MiniDrawer>
     </>
   );

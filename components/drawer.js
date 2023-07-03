@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -21,10 +20,20 @@ import { Container } from "@mui/material";
 import Head from "next/head";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import { useRouter } from "next/router";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useSession } from "next-auth/react";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useState } from "react";
+import { signOut } from "next-auth/react";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import KeyIcon from "@mui/icons-material/Key";
 
 const drawerWidth = 240;
 
@@ -96,8 +105,12 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer({ children }) {
   const router = useRouter();
 
+  const { data: session, status } = useSession();
+
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,11 +120,23 @@ export default function MiniDrawer({ children }) {
     setOpen(false);
   };
 
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   return (
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/coffecupsilhouette_89235.ico" sizes="any" />
+        <link
+          rel="icon"
+          href="/kisspng-car-computer-icons-filling-station-gasoline-fuel-d-gas-station-icon.png"
+          sizes="any"
+        />
       </Head>
 
       <Box sx={{ display: "flex" }}>
@@ -130,9 +155,51 @@ export default function MiniDrawer({ children }) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
               GOBIERNO_COMBUSTIBLE v0.1
             </Typography>
+
+            {status === "authenticated" && (
+              <Box sx={{ flexGrow: 0 }}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={session.user.name} src="#" />
+                </IconButton>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <PersonIcon />
+                    <Typography textAlign="center">Perfil</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <KeyIcon />
+                    <Typography textAlign="center">Contraseña</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => signOut()}>
+                    <LogoutIcon />
+                    <Typography textAlign="center">Salir</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -147,7 +214,7 @@ export default function MiniDrawer({ children }) {
           </DrawerHeader>
           <Divider />
           <List>
-          <ListItem
+            <ListItem
               disablePadding
               sx={{ display: "block" }}
               onClick={() => router.push("/")}
@@ -160,14 +227,14 @@ export default function MiniDrawer({ children }) {
                 }}
               >
                 <ListItemIcon
-                title="Tablero"
+                  title="Tablero"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
                     justifyContent: "center",
                   }}
                 >
-                  <LeaderboardIcon color="primary"/>
+                  <LeaderboardIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText
                   primary="Tablero"
@@ -175,7 +242,7 @@ export default function MiniDrawer({ children }) {
                 />
               </ListItemButton>
             </ListItem>
-            
+
             <ListItem
               disablePadding
               sx={{ display: "block" }}
@@ -189,7 +256,7 @@ export default function MiniDrawer({ children }) {
                 }}
               >
                 <ListItemIcon
-                title="Combustible"
+                  title="Combustible"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
@@ -204,7 +271,7 @@ export default function MiniDrawer({ children }) {
                 />
               </ListItemButton>
             </ListItem>
-            
+
             <ListItem
               disablePadding
               sx={{ display: "block" }}
@@ -218,7 +285,7 @@ export default function MiniDrawer({ children }) {
                 }}
               >
                 <ListItemIcon
-                title="Despacho"
+                  title="Despacho"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
@@ -247,7 +314,7 @@ export default function MiniDrawer({ children }) {
                 }}
               >
                 <ListItemIcon
-                title="Entidad"
+                  title="Entidad"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
@@ -276,7 +343,7 @@ export default function MiniDrawer({ children }) {
                 }}
               >
                 <ListItemIcon
-                title="Asignación"
+                  title="Asignación"
                   sx={{
                     minWidth: 0,
                     mr: open ? 3 : "auto",
@@ -292,13 +359,42 @@ export default function MiniDrawer({ children }) {
               </ListItemButton>
             </ListItem>
 
-
+            <ListItem
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={() => router.push("/usuario")}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  title="Usuarios"
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ManageAccountsIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Usuarios"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3,mt:"4rem" }} id="container">
-          <Container maxWidth="xl">
-            {children}
-          </Container>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 3, mt: "4rem" }}
+          id="container"
+        >
+          <Container maxWidth="xl">{children}</Container>
         </Box>
       </Box>
       <ToastContainer />

@@ -67,7 +67,7 @@ function FormNuevoAsignacion() {
 
   const obtenerEntidad = async () => {
     try {
-      const { data } = await axios.get("/api/asignacion/" + router.query.id);
+      const { data } = await axios.get(`/api/asignacion/${router.query.id}`);
       setAsignacion(data);
       setFecha(data.fecha);
     } catch (error) {

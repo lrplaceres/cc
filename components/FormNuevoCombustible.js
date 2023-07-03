@@ -44,7 +44,7 @@ function FormNuevoCombustible() {
 
   const obtenerCombustible = async () => {
     try {
-      const { data } = await axios.get("/api/combustible/" + router.query.id);
+      const { data } = await axios.get(`combustible/${router.query.id}`);
       setCombustible(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");

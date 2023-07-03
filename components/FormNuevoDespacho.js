@@ -72,7 +72,7 @@ function FormNuevoDespacho() {
 
   const obtenerDespacho = async () => {
     try {
-      const { data } = await axios.get("/api/despacho/" + router.query.id);
+      const { data } = await axios.get(`/api/despacho/${router.query.id}`);
       setDespacho(data);
       setFecha(data.fecha)
     } catch (error) {

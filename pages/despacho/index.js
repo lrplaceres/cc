@@ -6,7 +6,7 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-  Stack,
+  Stack, Typography,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
@@ -47,14 +47,13 @@ function index({ despachos }) {
       </Head>
       <MiniDrawer>
         {despachos.length === 0 ? (
-          <Card sx={{ p: "1rem", mb: "0.5rem" }}>
-            <Stack sx={{ width: "100%" }} spacing={2}>
-              <Alert severity="info">No hay despachos disponibles</Alert>
-            </Stack>
-          </Card>
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="info">No hay despachos disponibles</Alert>
+          </Stack>
         ) : (
           <Container maxWidth="sm">
-            <Card sx={{ p: "0.5rem" }}>
+            <Card elevation={0}>
+            <Typography textAlign="center" variant="h4" color="initial">DESPACHOS</Typography>
               <DataGrid
                 rows={despachos}
                 columns={columns}

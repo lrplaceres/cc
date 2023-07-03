@@ -66,7 +66,7 @@ function FormNuevoEntidad() {
 
   const obtenerEntidad = async () => {
     try {
-      const { data } = await axios.get("/api/entidad/" + router.query.id);
+      const { data } = await axios.get(`/api/entidad/${router.query.id}`);
       setEntidad(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
