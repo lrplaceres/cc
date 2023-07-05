@@ -161,7 +161,7 @@ export default function MiniDrawer({ children }) {
               component="div"
               sx={{ flexGrow: 1 }}
             >
-              GOBIERNO_COMBUSTIBLE v0.1
+              HORUS <small>v0.1</small>
             </Typography>
 
             {status === "authenticated" && (
