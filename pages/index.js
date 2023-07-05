@@ -7,13 +7,15 @@ import axios from "axios";
 import Image from "next/image";
 
 function index() {
+
+  var a = process.env.DATABASE_NAME
   return (
     <>
       <Head>
         <title>Tablero</title>
       </Head>
-      <MiniDrawer>
-        <Image src={`/PowerBI_Hospitality_02-1.jpg`} width={1366} height={768} />
+      <MiniDrawer>        
+         {process.env.NEXT_PUBLIC_MI_URL}
       </MiniDrawer>
     </>
   );
@@ -23,7 +25,7 @@ export default index;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-
+  
   return {
     props: {},
   };

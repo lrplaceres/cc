@@ -33,7 +33,7 @@ function FormNuevoUsuario() {
     repite: "",
     entidad: "",
     rol: "",
-    activo: 1,
+    activo: true,
   });
 
   const [entidades, setEntidades] = useState([]);
@@ -64,11 +64,17 @@ function FormNuevoUsuario() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //TODO:validar usuario antes de enviar
     try {
+      var { data: cont } = await axios.get(
+        `/api/usuario/existe/${usuario.usuario}`
+      );
+      if (cont[0].cont) {
+        setUsuario({ ...usuario, ["usuario"]: "" });
+        return toast.error("Usuario no disponible");
+      }
+
       if (usuario.contrasena != usuario.repite) {
-        usuario.contrasena = "";
-        usuario.repite = "";
+        setUsuario({ ...usuario, ["contrasena"]: "" });
         return toast.error("Las contraseñas deben coincidir");
       }
 
@@ -77,8 +83,7 @@ function FormNuevoUsuario() {
         usuario.contrasena == usuario.usuario ||
         usuario.contrasena == usuario.correo
       ) {
-        usuario.contrasena = "";
-        usuario.repite = "";
+        setUsuario({ ...usuario, ["contrasena"]: "" });
         return toast.error(
           "La contraseña no debe coincidir con su nombre, usuario o correo"
         );
@@ -133,6 +138,7 @@ function FormNuevoUsuario() {
               maxLength={35}
               required
               fullWidth
+              value={usuario.usuario}
               sx={{ mb: ".5rem" }}
             />
 
@@ -159,6 +165,7 @@ function FormNuevoUsuario() {
               autoComplete="off"
               required
               fullWidth
+              value={usuario.contrasena}
               sx={{ mb: ".5rem" }}
             />
             <TextField
@@ -172,6 +179,7 @@ function FormNuevoUsuario() {
               autoComplete="off"
               required
               fullWidth
+              value={usuario.contrasena ? usuario.repite : ""}
               sx={{ mb: ".5rem" }}
             />
 

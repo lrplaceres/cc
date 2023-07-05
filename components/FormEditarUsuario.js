@@ -39,7 +39,7 @@ function FormEditarUsuario() {
     repite: "",
     entidad: "",
     rol: "",
-    activo: 1,
+    activo: true,
   });
 
   const [contrasena, setContrasena] = useState("");
@@ -234,7 +234,7 @@ function FormEditarUsuario() {
             </FormControl>
 
             <FormControlLabel
-              control={<Checkbox value={usuario.activo} />}
+              control={<Checkbox />}
               label="Activo"
               name="activo"
               onChange={handleChecked}

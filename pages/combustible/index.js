@@ -85,7 +85,7 @@ export default index;
 
 export async function getServerSideProps(context) {
   const { data: combustibles } = await axios.get(
-    `${process.env.NEXTAUTH_URL}/api/combustible`
+    `${process.env.MI_IP_BACKEND}/api/combustible`
   );
   return {
     props: {

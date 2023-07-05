@@ -21,7 +21,6 @@ import Head from "next/head";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import { useRouter } from "next/router";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -34,6 +33,7 @@ import { signOut } from "next-auth/react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
+import BusinessIcon from '@mui/icons-material/Business';
 
 const drawerWidth = 240;
 
@@ -321,7 +321,7 @@ export default function MiniDrawer({ children }) {
                     justifyContent: "center",
                   }}
                 >
-                  <AddBusinessIcon />
+                  <BusinessIcon />
                 </ListItemIcon>
                 <ListItemText
                   primary="Entidad"
@@ -391,7 +391,7 @@ export default function MiniDrawer({ children }) {
         </Drawer>
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3, mt: "4rem" }}
+          sx={{ flexGrow: 1,  mt: "4rem" }}
           id="container"
         >
           <Container maxWidth="xl">{children}</Container>

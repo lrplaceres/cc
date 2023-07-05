@@ -43,7 +43,7 @@ export const authOptions = {
           "$2a$10$CwTysUXWue0Thq9StjUK0u"
         );
         const { data: user } = await axios.post(
-         `${process.env.NEXTAUTH_URL}/api/usuario/login`,
+         `${process.env.MI_IP_BACKEND}/api/usuario/login`,
           credentials
         );
 

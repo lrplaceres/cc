@@ -101,7 +101,7 @@ export default index;
 
 export async function getServerSideProps(context) {
   const { data: usuarios } = await axios.get(
-    `${process.env.NEXTAUTH_URL}/api/usuario`
+    `${process.env.MI_IP_BACKEND}/api/usuario`
   );
   return {
     props: {

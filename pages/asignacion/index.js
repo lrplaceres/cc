@@ -7,6 +7,7 @@ import {
   SpeedDialAction,
   SpeedDialIcon,
   Stack,
+  Typography,
 } from "@mui/material";
 import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -106,7 +107,7 @@ export default index;
 
 export async function getServerSideProps(context) {
   const { data: asignaciones } = await axios.get(
-    `${process.env.NEXTAUTH_URL}/api/asignacion`
+    `${process.env.MI_IP_BACKEND}/api/asignacion`
   );
   return {
     props: {

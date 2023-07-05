@@ -19,7 +19,7 @@ const obtenerUsuario = async (req, res) => {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT uid, nombre, usuario, correo, entidad, rol, activo FROM usuario  WHERE uid = ?",
+        "SELECT uid, nombre, usuario, correo, entidad, rol, activo FROM usuario WHERE uid = ?",
         [id]
       );
     return res.status(200).json(result[0]);

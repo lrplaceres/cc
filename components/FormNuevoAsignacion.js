@@ -11,12 +11,13 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoneIcon from "@mui/icons-material/Done";
@@ -28,6 +29,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
+import "dayjs/locale/es";
 
 function FormNuevoAsignacion() {
   const router = useRouter();
@@ -39,11 +41,15 @@ function FormNuevoAsignacion() {
     entidad: "",
   });
 
-  const [fecha, setFecha] = useState(new Date());
+  const [fecha, setFecha] = useState();
 
   const [combustibles, setCombustibles] = useState([]);
 
   const [entidades, setEntidades] = useState([]);
+
+  const [asignado, setAsignado] = useState(0);
+
+  const [despacho, setDespacho] = useState(0);
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -58,7 +64,6 @@ function FormNuevoAsignacion() {
   };
 
   useEffect(() => {
-    obtenerCombustibles();
     obtenerEntidades();
     if (router.query.id) {
       obtenerEntidad();
@@ -75,10 +80,37 @@ function FormNuevoAsignacion() {
     }
   };
 
-  const obtenerCombustibles = async () => {
+  const obtenerCombustiblesXdia = async (dia) => {
     try {
-      const { data } = await axios.get("/api/combustible/");
+      const { data } = await axios.post("/api/despacho/xdia", { dia });
       setCombustibles(data);
+      setAsignacion({ ...asignacion, ["combustible"]: "" });
+      setDespacho(0);
+      setAsignado(0);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const obtenerCombustibleAsignadoXdia = async ({ target: { value } }) => {
+    try {
+      const { data } = await axios.post("/api/asignacion/xfechaxcombustible", {
+        fecha,
+        value,
+      });
+      setAsignado(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const obtenerCombustibleDespachoXdia = async ({ target: { value } }) => {
+    try {
+      const { data } = await axios.post("/api/despacho/sumaxdiaxfecha", {
+        fecha,
+        value,
+      });
+      setDespacho(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -138,7 +170,24 @@ function FormNuevoAsignacion() {
             >
               {router.query.id ? "Edite" : "Ingrese"} la asignación
             </Typography>
-            <FormControl fullWidth sx={{ mb: "0.5rem" }}>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+              <DatePicker
+                value={
+                  router.query.id
+                    ? dayjs(moment(fecha).utc().format("YYYY-MM-DD"))
+                    : ""
+                }
+                onChange={(newValue) => {
+                  setFecha(newValue);
+                  obtenerCombustiblesXdia(newValue);
+                }}
+                format="YYYY-MM-DD"
+                sx={{ mb: ".5rem" }}
+              />
+            </LocalizationProvider>
+
+            <FormControl fullWidth sx={{ mb: ".5rem" }}>
               <InputLabel id="demo-simple-select-label">
                 Tipo de Combustible
               </InputLabel>
@@ -148,12 +197,39 @@ function FormNuevoAsignacion() {
                 name="combustible"
                 value={asignacion.combustible}
                 label="Tipo de Combustible"
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  obtenerCombustibleAsignadoXdia(e);
+                  obtenerCombustibleDespachoXdia(e);
+                }}
                 required
+                readOnly={!combustibles.length}
+                disabled={!combustibles.length}
               >
                 {combustibles.map((comb, index) => (
                   <MenuItem key={index.toString()} value={comb.id}>
                     {comb.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <br />
+
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label2">Entidad</InputLabel>
+              <Select
+                labelId="demo-simple-select-label2"
+                id="demo-simple-select2"
+                name="entidad"
+                value={asignacion.entidad}
+                label="Entidad"
+                onChange={handleChange}
+                sx={{ mb: ".5rem" }}
+              >
+                {entidades.map((ent, index) => (
+                  <MenuItem key={index.toString()} value={ent.id}>
+                    {ent.nombre}
                   </MenuItem>
                 ))}
               </Select>
@@ -167,48 +243,27 @@ function FormNuevoAsignacion() {
               name="cantidad"
               required
               fullWidth
-              sx={{ mb: "0.5rem" }}
+              sx={{ mb: ".5rem" }}
               value={asignacion.cantidad}
+              readOnly={!combustibles.length || !asignacion.combustible}
+              disabled={!combustibles.length || !asignacion.combustible}
+              helperText="hola mundo"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {despacho - asignado}
+                  </InputAdornment>
+                ),
+                inputProps: { min: 1, max: despacho - asignado },
+              }}
             />
-
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label2">Entidad</InputLabel>
-              <Select
-                labelId="demo-simple-select-label2"
-                id="demo-simple-select2"
-                name="entidad"
-                value={asignacion.entidad}
-                label="Entidad"
-                onChange={handleChange}
-                sx={{ mb: "0.5rem" }}
-              >
-                {entidades.map((ent, index) => (
-                  <MenuItem key={index.toString()} value={ent.id}>
-                    {ent.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                value={dayjs(
-                  moment(asignacion.fecha).utc().format("YYYY-MM-DD")
-                )}
-                onChange={(newValue) => setFecha(newValue)}
-                format="YYYY-MM-DD"
-                sx={{ mb: ".5rem" }}
-              />
-            </LocalizationProvider>
-
-            <br />
 
             <Button
               variant="contained"
               color="inherit"
               type="reset"
               startIcon={<CancelIcon />}
-              sx={{ mr: "0.5rem" }}
+              sx={{ mr: ".5rem" }}
               onClick={() => router.push("/asignacion")}
             >
               Cancelar

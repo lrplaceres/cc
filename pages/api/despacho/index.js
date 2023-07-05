@@ -33,7 +33,7 @@ const obtenerTodoscombustibles = async (req, res) => {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT d.uid as id, d.fecha, d.cantidad, c.nombre as combustible FROM despacho as d INNER JOIN combustible as c ON d.combustible = c.uid ORDER BY fecha ASC"
+        "SELECT d.uid as id, d.fecha, d.cantidad, c.nombre as combustible FROM despacho d INNER JOIN combustible c ON d.combustible = c.uid ORDER BY fecha ASC"
       );
     return res.status(200).json(result);
   } catch (error) {
