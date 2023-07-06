@@ -33,7 +33,7 @@ import { signOut } from "next-auth/react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
-import BusinessIcon from '@mui/icons-material/Business';
+import BusinessIcon from "@mui/icons-material/Business";
 
 const drawerWidth = 240;
 
@@ -134,7 +134,7 @@ export default function MiniDrawer({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           rel="icon"
-          href="/kisspng-car-computer-icons-filling-station-gasoline-fuel-d-gas-station-icon.png"
+          href="/fondo_azul.png"
           sizes="any"
         />
       </Head>
@@ -161,7 +161,7 @@ export default function MiniDrawer({ children }) {
               component="div"
               sx={{ flexGrow: 1 }}
             >
-              HORUS <small>v0.1</small>
+              {process.env.NEXT_PUBLIC_NAME_APP}
             </Typography>
 
             {status === "authenticated" && (
@@ -242,158 +242,187 @@ export default function MiniDrawer({ children }) {
                 />
               </ListItemButton>
             </ListItem>
-
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => router.push("/combustible")}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  title="Combustible"
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
+            {session?.rol == "superadmin" ? (
+              <>
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/combustible")}
                 >
-                  <OilBarrelIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Combustible"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Combustible"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <OilBarrelIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Combustible"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
 
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => router.push("/despacho")}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  title="Despacho"
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/despacho")}
                 >
-                  <CalendarMonthIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Despacho"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Despacho"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CalendarMonthIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Despacho"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
 
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => router.push("/entidad")}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  title="Entidad"
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/entidad")}
                 >
-                  <BusinessIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Entidad"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Entidad"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <BusinessIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Entidad"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
 
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => router.push("/asignacion")}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  title="Asignación"
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/asignacion")}
                 >
-                  <LocalGasStationIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Asignación"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Asignación"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <LocalGasStationIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Asignación"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
 
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => router.push("/usuario")}
-            >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  title="Usuarios"
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/usuario")}
                 >
-                  <ManageAccountsIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Usuarios"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Usuarios"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ManageAccountsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Usuarios"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            ) : (
+              <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/distribucion")}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Asignación"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <LocalGasStationIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Asignación"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+            )}
           </List>
         </Drawer>
-        <Box
-          component="main"
-          sx={{ flexGrow: 1,  mt: "4rem" }}
-          id="container"
-        >
+        <Box component="main" sx={{ flexGrow: 1, mt: "4rem" }} id="container">
           <Container maxWidth="xl">{children}</Container>
         </Box>
       </Box>

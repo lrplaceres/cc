@@ -14,6 +14,7 @@ export const authOptions = {
         token.uid = user.uid;
         token.email = user.correo;
         token.entidad = user.entidad;
+        token.identidad = user.identidad;
       }
       return token;
     },
@@ -23,6 +24,7 @@ export const authOptions = {
       session.usuario = token.usuario;
       session.uid = token.uid;
       session.entidad = token.entidad;
+      session.identidad = token.identidad;
       return session;
     },
   },

@@ -247,7 +247,6 @@ function FormNuevoAsignacion() {
               value={asignacion.cantidad}
               readOnly={!combustibles.length || !asignacion.combustible}
               disabled={!combustibles.length || !asignacion.combustible}
-              helperText="hola mundo"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

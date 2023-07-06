@@ -7,16 +7,12 @@ import axios from "axios";
 import Image from "next/image";
 
 function index() {
-
-  var a = process.env.DATABASE_NAME
   return (
     <>
       <Head>
         <title>Tablero</title>
       </Head>
-      <MiniDrawer>        
-         {process.env.NEXT_PUBLIC_MI_URL}
-      </MiniDrawer>
+      <MiniDrawer>{process.env.NEXT_PUBLIC_MI_URL}</MiniDrawer>
     </>
   );
 }
@@ -25,7 +21,7 @@ export default index;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  
+
   return {
     props: {},
   };

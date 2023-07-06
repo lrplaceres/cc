@@ -15,6 +15,8 @@ import Link from "next/link";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import moment from "moment";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function index({ despachos }) {
   const router = useRouter();
@@ -89,6 +91,16 @@ function index({ despachos }) {
 export default index;
 
 export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  
   const { data: despachos } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/despacho`
   );

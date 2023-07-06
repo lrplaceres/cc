@@ -9,9 +9,9 @@ export default function SignIn({ csrfToken }) {
   return (
     <>
       <Head>
-        <title>Acceso</title>
+        <title>{process.env.NEXT_PUBLIC_NAME_APP}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/kisspng-car-computer-icons-filling-station-gasoline-fuel-d-gas-station-icon.png" sizes="any" />
+        <link rel="icon" href="/fondo_azul.png" sizes="any" />
       </Head>
       <Container
         maxWidth="sm"
@@ -30,7 +30,7 @@ export default function SignIn({ csrfToken }) {
             boxShadow:"0px 0px 3px 1px #938d8d"
           }}
         >
-          <Typography variant="overline" color="initial" align="center" component="p">Ingrese sus credenciales</Typography>
+          <Typography variant="h5" color="darkblue" align="center" component="p" marginBottom={2.5} marginTop={2.5}>INICIAR SESIÓN</Typography>
           <form method="post" action="/api/auth/callback/credentials">
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <TextField
@@ -50,8 +50,8 @@ export default function SignIn({ csrfToken }) {
               required
               sx={{ mb: ".5rem" }}
             />
-            <Button variant="contained" color="primary" type="submit">
-              Aceptar
+            <Button variant="contained" color="primary" type="submit" fullWidth>
+              Continuar
             </Button>
           </form>
         </Box>
@@ -74,6 +74,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
+
   return {
     props: {
       csrfToken: await getCsrfToken(context),

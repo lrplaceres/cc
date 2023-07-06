@@ -22,7 +22,7 @@ const obtenerUsuario = async (req, res) => {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT u.uid, u.usuario, u.correo, u.rol, u.nombre, e.nombre as entidad FROM usuario u INNER JOIN entidad e ON u.entidad = e.uid WHERE usuario = ? and contrasena = ? and activo = 1 limit 1",
+        "SELECT u.uid, u.usuario, u.correo, u.rol, u.nombre, e.nombre as entidad, e.uid as identidad FROM usuario u INNER JOIN entidad e ON u.entidad = e.uid WHERE usuario = ? and contrasena = ? and activo = 1 limit 1",
         [usuario, contrasena]
       );
     return res.status(200).json(result[0]);

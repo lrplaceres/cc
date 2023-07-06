@@ -28,6 +28,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
+import "dayjs/locale/es";
 
 function FormNuevoDespacho() {
   const router = useRouter();
@@ -158,7 +159,7 @@ function FormNuevoDespacho() {
               sx={{ mb: "0.5rem" }}
               value={despacho.cantidad}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 value={dayjs(moment(fecha).utc().format("YYYY-MM-DD"))}
                 onChange={(newValue) => setFecha(newValue)}

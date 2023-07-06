@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function index({ usuarios }) {
   const router = useRouter();
@@ -100,6 +102,16 @@ function index({ usuarios }) {
 export default index;
 
 export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  
   const { data: usuarios } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/usuario`
   );

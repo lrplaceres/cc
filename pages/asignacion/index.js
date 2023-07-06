@@ -17,6 +17,8 @@ import axios from "axios";
 import Link from "next/link";
 import moment from "moment";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function index({ asignaciones }) {
   const router = useRouter();
@@ -106,6 +108,16 @@ function index({ asignaciones }) {
 export default index;
 
 export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  
   const { data: asignaciones } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/asignacion`
   );

@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function index({ combustibles }) {
   const router = useRouter();
@@ -84,6 +86,16 @@ function index({ combustibles }) {
 export default index;
 
 export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const { data: combustibles } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/combustible`
   );

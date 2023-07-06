@@ -16,6 +16,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function index({ entidades }) {
   const router = useRouter();
@@ -103,6 +105,16 @@ function index({ entidades }) {
 export default index;
 
 export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  
   const { data: entidades } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/entidad/subordinacion`
   );
