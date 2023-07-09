@@ -1,5 +1,4 @@
 import { pool } from "@/config/db";
-import moment from "moment";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 
@@ -13,24 +12,22 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case "POST":
-      return await asignadoxfechaxdia(req, res);
+      return await distribuidoxMes(req, res);
     default:
       return;
   }
 }
 
-const asignadoxfechaxdia = async (req, res) => {
-  var { fecha, value } = req.body;
-  var fecha2 = moment(fecha).utc().format("YYYY-MM-DD");
-  fecha = fecha2;
+const distribuidoxMes = async (req, res) => {
+  var { identidad, mes, anno } = req.body;
   try {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT SUM(a.cantidad) as asignado FROM asignacion a WHERE a.fecha = ? AND a.combustible = ?",
-        [fecha2, value]
+        "SELECT b.uid as id, b.cantidad,b.fecha, c.nombre as combustible, e.nombre as entidad FROM asignacion b INNER JOIN combustible c ON b.combustible = c.uid INNER JOIN entidad e ON b.entidad = e.uid WHERE b.entidad IN (SELECT e.uid FROM entidad e WHERE e.subordinado = ? ) AND YEAR(b.fecha) = ? AND MONTH(b.fecha) = ? ORDER BY c.nombre ASC , e.nombre ASC",
+        [identidad, anno, mes]
       );
-      return res.status(200).json(result[0].asignado);
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

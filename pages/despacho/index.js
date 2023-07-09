@@ -23,9 +23,9 @@ function index({ despachos }) {
 
   const columns = [
     {
-      field: "Link",
+      field: "fecha",
       headerName: "Fecha",
-      flex: 1,
+      width: 150,
       renderCell: (params) => (
         <Link href={`/despacho/${params.row.id}`} className="decoration-none">
           {moment(params.row.fecha).utc().format("YYYY-MM-DD")}
@@ -35,17 +35,19 @@ function index({ despachos }) {
     {
       field: "combustible",
       headerName: "Combustible",
+      width: 250,
     },
     {
       field: "cantidad",
       headerName: "Cantidad",
+      width: 100,
     },
   ];
 
   return (
     <>
       <Head>
-        <title>Listado de Despachos</title>
+        <title>Despachos</title>
       </Head>
       <MiniDrawer>
         {despachos.length === 0 ? (
@@ -54,8 +56,8 @@ function index({ despachos }) {
           </Stack>
         ) : (
           <Container maxWidth="sm">
-            <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">DESPACHOS</Typography>
+            <Card sx={{ p: "1rem" }}>
+            <Typography variant="h6" color="primary" align="center" mb={2}>DESPACHOS</Typography>
               <DataGrid
                 rows={despachos}
                 columns={columns}

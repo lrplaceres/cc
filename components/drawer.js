@@ -34,6 +34,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
 import BusinessIcon from "@mui/icons-material/Business";
+import TableRowsIcon from '@mui/icons-material/TableRows';
 
 const drawerWidth = 240;
 
@@ -185,7 +186,7 @@ export default function MiniDrawer({ children }) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={()=>router.push("/usuario/perfil")}>
                     <PersonIcon />
                     <Typography textAlign="center">Perfil</Typography>
                   </MenuItem>
@@ -390,6 +391,7 @@ export default function MiniDrawer({ children }) {
                 </ListItem>
               </>
             ) : (
+              <>
               <ListItem
                   disablePadding
                   sx={{ display: "block" }}
@@ -418,6 +420,38 @@ export default function MiniDrawer({ children }) {
                     />
                   </ListItemButton>
                 </ListItem>
+
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/distribucion/listar")}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Listar"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <TableRowsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Listar"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </>
+
+                
 
             )}
           </List>

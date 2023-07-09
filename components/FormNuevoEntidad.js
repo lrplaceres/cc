@@ -75,7 +75,7 @@ function FormNuevoEntidad() {
 
   const obtenerEntidades = async () => {
     try {
-      const { data } = await axios.get("/api/entidad/subordinacionno");
+      const { data } = await axios.get("/api/entidad/sinsubordinacion");
       setEntidades(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
@@ -116,13 +116,8 @@ function FormNuevoEntidad() {
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
-            <Typography
-              variant="overline"
-              color="initial"
-              align="center"
-              component="p"
-            >
-              {router.query.id ? "Edite" : "Ingrese"} la entidad
+            <Typography variant="h6" color="primary" align="center" mb={2}>
+              {router.query.id ? "EDITE" : "INGRESE"} LA ENTIDAD
             </Typography>
 
             <TextField

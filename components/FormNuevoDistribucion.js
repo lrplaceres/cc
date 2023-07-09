@@ -27,12 +27,15 @@ import Head from "next/head";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
 import "dayjs/locale/es";
+import { DateCalendar, DatePicker } from "@mui/x-date-pickers";
+import { useSession } from "next-auth/react";
 
-function FormNuevoAsignacion() {
+function FormNuevoDistribucion() {
   const router = useRouter();
+
+  const { data: session, status } = useSession();
 
   const [asignacion, setAsignacion] = useState({
     uid: uuidv4(),
@@ -43,74 +46,36 @@ function FormNuevoAsignacion() {
 
   const [fecha, setFecha] = useState();
 
-  const [combustibles, setCombustibles] = useState([]);
-
   const [entidades, setEntidades] = useState([]);
-
-  const [asignado, setAsignado] = useState(0);
-
-  const [despacho, setDespacho] = useState(0);
-
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleChange = ({ target: { name, value } }) => {
     setAsignacion({ ...asignacion, [name]: value });
   };
 
+  const [asignado, setAsignado] = useState([]);
+
+  const [anno, setAnno] = useState();
+
+  const [mes, setMes] = useState();
+
+  const [total, setTotal] = useState(0);
+
+  const [distribuido, setDistribuido] = useState(0);
+
   useEffect(() => {
     obtenerEntidades();
-    if (router.query.id) {
-      obtenerAsignacion();
-    }
   }, []);
 
-  const obtenerAsignacion = async () => {
+  const buscarAsignacionesMes = async (anno, mes) => {
     try {
-      const { data } = await axios.get(`/api/asignacion/${router.query.id}`);
-      setAsignacion(data);
-      setFecha(data.fecha);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const obtenerCombustiblesXdia = async (dia) => {
-    try {
-      const { data } = await axios.post("/api/despacho/xdia", { dia });
-      setCombustibles(data);
-      setAsignacion({ ...asignacion, ["combustible"]: "" });
-      setDespacho(0);
-      setAsignado(0);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const obtenerCombustibleAsignadoXdia = async ({ target: { value } }) => {
-    try {
-      const { data } = await axios.post("/api/asignacion/xfechaxcombustible", {
-        fecha,
-        value,
+      var identidad = session?.identidad;
+      const { data } = await axios.post("/api/asignacion/buscarAsignadoMes", {
+        anno,
+        mes,
+        identidad,
       });
       setAsignado(data);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const obtenerCombustibleDespachoXdia = async ({ target: { value } }) => {
-    try {
-      const { data } = await axios.post("/api/despacho/sumaxdiaxfecha", {
-        fecha,
-        value,
-      });
-      setDespacho(data);
+      obtenerEntidades();
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -118,8 +83,41 @@ function FormNuevoAsignacion() {
 
   const obtenerEntidades = async () => {
     try {
-      const { data } = await axios.get("/api/entidad/");
+      var identidad = session?.identidad;
+      const { data } = await axios.post(`/api/entidad/subordinados`, {
+        identidad,
+      });
       setEntidades(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const obtenerCombustibleTotalXmes = async ({ target: { value } }) => {
+    try {
+      var identidad = session?.identidad;
+      const { data } = await axios.post("/api/asignacion/xMesxCombustiblexEntidad", {
+        identidad,
+        value,
+        mes,
+        anno
+      });
+      setTotal(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  }; 
+  
+  const obtenerCombustibleDistribuidoXmes = async ({ target: { value } }) => {
+    try {
+      var identidad = session?.identidad;
+      const { data } = await axios.post("/api/asignacion/xMesxCombustiblexEntidadesSubordinadas", {
+        identidad,
+        value,
+        mes,
+        anno
+      });
+      setDistribuido(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -138,17 +136,7 @@ function FormNuevoAsignacion() {
         await axios.post("/api/asignacion", { asignacion, fecha });
         toast.success("Se ha creado la asignacion");
       }
-      setTimeout(() => router.push("/asignacion"), 250);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const eliminarAsignacion = async (id) => {
-    try {
-      await axios.delete(`/api/asignacion/${id}`);
-      toast.success("Se ha eliminado la asignacion");
-      setTimeout(() => router.push("/asignacion"), 250);
+      setTimeout(() => router.push("/distribucion"), 250);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -156,16 +144,11 @@ function FormNuevoAsignacion() {
 
   return (
     <>
-      <Head>
-        <title>{router.query.id ? "Editar" : "Nueva"} asignación</title>
-      </Head>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
-            <Typography
-               variant="h6" color="primary" align="center" mb={2}
-            >
-              {router.query.id ? "EDITE" : "INGRESE"} LA ASIGNACIÓN
+            <Typography variant="h6" color="primary" align="center" mb={2}>
+              {router.query.id ? "EDITE" : "INGRESE"} LA DISTRIBUCIÓN
             </Typography>
 
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
@@ -177,9 +160,13 @@ function FormNuevoAsignacion() {
                 }
                 onChange={(newValue) => {
                   setFecha(newValue);
-                  obtenerCombustiblesXdia(newValue);
+                  buscarAsignacionesMes(newValue.year(), newValue.month() + 1);
+                  setMes(newValue.month() + 1);
+                  setAnno(newValue.year());
                 }}
                 format="YYYY-MM-DD"
+                minDate={dayjs("2023-07-01")}
+                maxDate={dayjs("2025-12-12")}
                 sx={{ mb: ".5rem" }}
               />
             </LocalizationProvider>
@@ -196,15 +183,15 @@ function FormNuevoAsignacion() {
                 label="Tipo de Combustible"
                 onChange={(e) => {
                   handleChange(e);
-                  obtenerCombustibleAsignadoXdia(e);
-                  obtenerCombustibleDespachoXdia(e);
+                  obtenerCombustibleTotalXmes(e);
+                  obtenerCombustibleDistribuidoXmes(e)
                 }}
                 required
-                readOnly={!combustibles.length}
-                disabled={!combustibles.length}
+                readOnly={!asignado.length}
+                disabled={!asignado.length}
               >
-                {combustibles.map((comb, index) => (
-                  <MenuItem key={index.toString()} value={comb.id}>
+                {asignado.map((comb, index) => (
+                  <MenuItem key={index.toString()} value={comb.combustible}>
                     {comb.nombre}
                   </MenuItem>
                 ))}
@@ -225,7 +212,7 @@ function FormNuevoAsignacion() {
                 sx={{ mb: ".5rem" }}
               >
                 {entidades.map((ent, index) => (
-                  <MenuItem key={index.toString()} value={ent.id}>
+                  <MenuItem key={index.toString()} value={ent.uid}>
                     {ent.nombre}
                   </MenuItem>
                 ))}
@@ -242,15 +229,15 @@ function FormNuevoAsignacion() {
               fullWidth
               sx={{ mb: ".5rem" }}
               value={asignacion.cantidad}
-              readOnly={!combustibles.length || !asignacion.combustible}
-              disabled={!combustibles.length || !asignacion.combustible}
+               readOnly={!asignado.length || !asignacion.combustible}
+              disabled={!asignado.length || !asignacion.combustible}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {router.query.id ? despacho : despacho - asignado}
+                    {total-distribuido}
                   </InputAdornment>
                 ),
-                inputProps: { min: 1, max: router.query.id ? despacho : despacho - asignado },
+                inputProps: { min: 1, max: total-distribuido },
               }}
             />
 
@@ -260,7 +247,7 @@ function FormNuevoAsignacion() {
               type="reset"
               startIcon={<CancelIcon />}
               sx={{ mr: ".5rem" }}
-              onClick={() => router.push("/asignacion")}
+              onClick={() => router.push("/distribucion")}
             >
               Cancelar
             </Button>
@@ -294,34 +281,8 @@ function FormNuevoAsignacion() {
           </Card>
         )}
       </Container>
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-      >
-        <DialogTitle>Eliminar asignación</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Al confirmar esta acción <strong>se borrarán los datos</strong>{" "}
-            relacionados.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => eliminarAsignacion(asignacion.uid)}
-          >
-            Aceptar
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }
 
-export default FormNuevoAsignacion;
+export default FormNuevoDistribucion;

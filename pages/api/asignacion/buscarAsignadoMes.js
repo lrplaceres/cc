@@ -1,7 +1,15 @@
 import { pool } from "@/config/db";
-import moment from "moment";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    res.status(403).json({ message: "Por favor, contacte al administrador" });
+    return;
+  }
+
   switch (req.method) {
     case "POST":
       return await buscarAsignacionesMes(req, res);
@@ -16,8 +24,8 @@ const buscarAsignacionesMes = async (req, res) => {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT SUM(a.cantidad) as cantidad, c.nombre, @uid:=@uid+1 AS id FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid WHERE a.entidad = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? GROUP BY a.combustible",
-        [identidad, anno, mes]
+        "SELECT a.combustible, COALESCE(SUM(a.cantidad),0) as cantidad, c.nombre , (SELECT COALESCE(SUM(b.cantidad),0) as cont from asignacion b WHERE b.entidad IN (SELECT e.uid FROM entidad e WHERE e.subordinado = ? ) AND YEAR(b.fecha) =  ? AND MONTH(b.fecha) = ? AND a.combustible = b.combustible) as distribuido FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid WHERE a.entidad = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? GROUP BY a.combustible ORDER BY c.nombre ASC",
+        [identidad, anno, mes, identidad, anno, mes]
       );
     return res.status(200).json(result);
   } catch (error) {

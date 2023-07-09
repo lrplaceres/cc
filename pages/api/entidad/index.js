@@ -1,6 +1,15 @@
 import { pool } from "@/config/db";
+import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { getServerSession } from "next-auth/next"
 
 export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions)
+
+  if (!session || session.rol != "superadmin") {
+    res.status(403).json({ message: "Por favor, contacte al administrador" });
+    return;
+  }
+  
   switch (req.method) {
     case "POST":
       return await adicionarEntidad(req, res);

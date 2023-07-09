@@ -1,5 +1,4 @@
 import { pool } from "@/config/db";
-import moment from "moment";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 
@@ -13,24 +12,22 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case "POST":
-      return await asignadoxfechaxdia(req, res);
+      return await asignadoxDiaSubordinadas(req, res);
     default:
       return;
   }
 }
 
-const asignadoxfechaxdia = async (req, res) => {
-  var { fecha, value } = req.body;
-  var fecha2 = moment(fecha).utc().format("YYYY-MM-DD");
-  fecha = fecha2;
+const asignadoxMes = async (req, res) => {
+  var { identidad, value, mes, anno } = req.body;
   try {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT SUM(a.cantidad) as asignado FROM asignacion a WHERE a.fecha = ? AND a.combustible = ?",
-        [fecha2, value]
+        "SELECT SUM(a.cantidad) as asignado FROM asignacion a WHERE a.entidad = ? AND a.combustible = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? ",
+        [identidad, value]
       );
-      return res.status(200).json(result[0].asignado);
+    return res.status(200).json(result[0].asignado);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

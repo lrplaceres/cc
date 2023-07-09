@@ -83,18 +83,13 @@ function FormNuevoCombustible() {
 
   return (
     <>
-    <Head>
-      <title>{router.query.id ? "Editar" : "Nuevo"} combustible</title>
-    </Head>
+      <Head>
+        <title>{router.query.id ? "Editar" : "Nuevo"} combustible</title>
+      </Head>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
-          <Typography
-            variant="overline"
-            color="initial"
-            align="center"
-            component="p"
-          >
-            {router.query.id ? "Edite" : "Ingrese"} el tipo de combustible
+          <Typography variant="h6" color="primary" align="center" mb={2}>
+            {router.query.id ? "EDITE" : "INGRESE"} EL TIPO DE COMBUSTIBLE
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField

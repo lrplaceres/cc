@@ -108,13 +108,8 @@ function FormNuevoUsuario() {
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
-            <Typography
-              variant="overline"
-              color="initial"
-              align="center"
-              component="p"
-            >
-              {router.query.id ? "Edite" : "Ingrese"} el usuario
+            <Typography variant="h6" color="primary" align="center" mb={2}>
+              {router.query.id ? "EDITE" : "INGRESE"} EL USUARIO
             </Typography>
 
             <TextField

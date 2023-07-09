@@ -1,6 +1,15 @@
 import { pool } from "@/config/db";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session || session.rol != "superadmin") {
+    res.status(403).json({ message: "Por favor, contacte al administrador" });
+    return;
+  }
+
   switch (req.method) {
     case "DELETE":
       return await eliminarUsuario(req, res);
@@ -55,17 +64,17 @@ const eliminarUsuario = async (req, res) => {
 };
 
 const cambiarUsuarioContrasena = async (req, res) => {
-    const { id } = req.query;
-    const { contrasena } = req.body;
-    try {
-      await pool
-        .promise()
-        .query("UPDATE usuario SET contrasena = ? WHERE uid = ?", [
-            contrasena,
-          id,
-        ]);
-      return res.status(204).json();
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
+  const { id } = req.query;
+  const { contrasena } = req.body;
+  try {
+    await pool
+      .promise()
+      .query("UPDATE usuario SET contrasena = ? WHERE uid = ?", [
+        contrasena,
+        id,
+      ]);
+    return res.status(204).json();
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
+};

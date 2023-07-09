@@ -65,8 +65,8 @@ function index({ usuarios }) {
           </Stack>
         ) : (
           <Container maxWidth="md">
-            <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">USUARIOS</Typography>
+            <Card sx={{ p: "1rem" }}>
+            <Typography variant="h6" color="primary" align="center" mb={2}>USUARIOS</Typography>
               <DataGrid
                 rows={usuarios}
                 columns={columns}

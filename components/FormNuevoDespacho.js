@@ -119,12 +119,9 @@ function FormNuevoDespacho() {
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
             <Typography
-              variant="overline"
-              color="initial"
-              align="center"
-              component="p"
+               variant="h6" color="primary" align="center" mb={2}
             >
-              {router.query.id ? "Edite" : "Ingrese"} el despacho
+              {router.query.id ? "EDITE" : "INGRESE"} EL DESPACHO
             </Typography>
 
             <FormControl fullWidth sx={{ mb: "0.5rem" }}>

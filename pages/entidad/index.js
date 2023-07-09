@@ -27,7 +27,6 @@ function index({ entidades }) {
       field: "nombre",
       headerName: "Nombre",
       width: 300,
-      //flex: 1,
       renderCell: (params) => (
         <Link href={`/entidad/${params.row.id}`} className="decoration-none">
           {params.row.nombre}
@@ -59,17 +58,17 @@ function index({ entidades }) {
   return (
     <>
       <Head>
-        <title>Listado de entidades</title>
+        <title>Entidades</title>
       </Head>
       <MiniDrawer>
         {entidades.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay despachos disponibles</Alert>
+            <Alert severity="info">No hay entidades disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
-            <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">ENTIDADES</Typography>
+            <Card sx={{ p: "1rem" }}>
+            <Typography variant="h6" color="primary" align="center" mb={2}>ENTIDADES</Typography>
               <DataGrid
                 rows={entidades}
                 columns={columns}
@@ -116,7 +115,7 @@ export async function getServerSideProps(context) {
   }
   
   const { data: entidades } = await axios.get(
-    `${process.env.MI_IP_BACKEND}/api/entidad/subordinacion`
+    `${process.env.MI_IP_BACKEND}/api/entidad/index2`    
   );
   return {
     props: {

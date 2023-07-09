@@ -12,7 +12,7 @@ import {
 import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
 import moment from "moment";
@@ -27,6 +27,7 @@ function index({ asignaciones }) {
     {
       field: "combustible",
       headerName: "Combustible",
+      width: 150,
     },
     {
       field: "cantidad",
@@ -45,24 +46,24 @@ function index({ asignaciones }) {
       ),
     },
     {
-      field: "acciones",
+      field: "actions",
+      type: "actions",
       headerName: "Acciones",
-      renderCell: (params) => (
-        <Link
-          href={`/asignacion/${params.row.id}`}
-          className="decoration-none"
-          title="Editar"
-        >
-          <EditNoteIcon />
-        </Link>
-      ),
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<EditNoteIcon />}
+          label="Editar"
+          onClick={() => router.push(`/asignacion/${params.row.id}`)}
+          showInMenu
+        />,
+      ],
     },
   ];
 
   return (
     <>
       <Head>
-        <title>Listado de asignaciones</title>
+        <title>Asignaciones</title>
       </Head>
       <MiniDrawer>
         {asignaciones.length === 0 ? (
@@ -71,8 +72,10 @@ function index({ asignaciones }) {
           </Stack>
         ) : (
           <Container maxWidth="md">
-            <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">ASIGNACIONES</Typography>
+            <Card sx={{ p: "1rem" }}>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                ASIGNACIONES
+              </Typography>
               <DataGrid
                 rows={asignaciones}
                 columns={columns}
@@ -117,7 +120,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  
+
   const { data: asignaciones } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/asignacion`
   );

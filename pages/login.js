@@ -1,9 +1,19 @@
 import { getCsrfToken } from "next-auth/react";
 import Container from "@mui/material/Container";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+  InputAdornment,
+} from "@mui/material";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Image from "next/image";
+import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 
 export default function SignIn({ csrfToken }) {
   return (
@@ -19,18 +29,35 @@ export default function SignIn({ csrfToken }) {
           minHeight: "95vh",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "center",
+          flexDirection: "column",
         }}
       >
+        <Image
+          src={`/Horus.png`}
+          width={200}
+          height={140}
+          alt="logo horus"
+          priority={true}
+        />
         <Box
           sx={{
             p: "1rem",
             width: 300,
             backgroundColor: "white",
-            boxShadow:"0px 0px 3px 1px #938d8d"
+            boxShadow: "0px 0px 3px 1px #938d8d",
           }}
         >
-          <Typography variant="h5" color="darkblue" align="center" component="p" marginBottom={2.5} marginTop={2.5}>INICIAR SESIÓN</Typography>
+          <Typography
+            variant="h5"
+            color="primary"
+            align="center"
+            component="p"
+            marginBottom={2.5}
+            marginTop={1}
+          >
+            INICIAR SESIÓN
+          </Typography>
           <form method="post" action="/api/auth/callback/credentials">
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <TextField
@@ -39,6 +66,13 @@ export default function SignIn({ csrfToken }) {
               name="usuario"
               fullWidth
               required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AlternateEmailIcon />
+                  </InputAdornment>
+                ),
+              }}
               sx={{ mb: ".5rem" }}
             />
             <TextField
@@ -50,22 +84,22 @@ export default function SignIn({ csrfToken }) {
               required
               sx={{ mb: ".5rem" }}
             />
+
             <Button variant="contained" color="primary" type="submit" fullWidth>
               Continuar
             </Button>
           </form>
         </Box>
+        <Typography variant="button" color="primary" marginTop={2}>
+          @XETID 2023
+        </Typography>
       </Container>
     </>
   );
 }
 
 export async function getServerSideProps(context) {
-  const session = await getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (session) {
     return {
       redirect: {

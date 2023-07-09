@@ -40,7 +40,7 @@ function index({ combustibles }) {
   return (
     <>
       <Head>
-        <title>Listado de combustibles</title>
+        <title>Combustibles</title>
       </Head>
       <MiniDrawer>
         {combustibles.length === 0 ? (
@@ -49,8 +49,8 @@ function index({ combustibles }) {
           </Stack>
         ) : (
           <Container maxWidth="sm">
-            <Card elevation={0}>
-            <Typography textAlign="center" variant="h4" color="initial">COMBUSTIBLES</Typography>
+            <Card sx={{ p: "1rem" }}>
+            <Typography variant="h6" color="primary" align="center" mb={2}>COMBUSTIBLES</Typography>
               <DataGrid
                 rows={combustibles}
                 columns={columns}
