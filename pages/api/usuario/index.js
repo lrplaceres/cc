@@ -5,9 +5,13 @@ import { getServerSession } from "next-auth/next";
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session || session.rol != "superadmin") {
-    res.status(403).json({ message: "Por favor, contacte al administrador" });
-    return;
+  const origen= req.headers.host;
+  const expresion = /[^(localhost)]/;
+  if(!origen.search(expresion)){
+    if (!session || session.rol != "superadmin") {
+      res.status(403).json({ message: "Por favor, contacte al administrador" });
+      return;
+    }
   }
 
   switch (req.method) {

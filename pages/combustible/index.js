@@ -50,7 +50,9 @@ function index({ combustibles }) {
         ) : (
           <Container maxWidth="sm">
             <Card sx={{ p: "1rem" }}>
-            <Typography variant="h6" color="primary" align="center" mb={2}>COMBUSTIBLES</Typography>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                COMBUSTIBLES
+              </Typography>
               <DataGrid
                 rows={combustibles}
                 columns={columns}
@@ -97,7 +99,10 @@ export async function getServerSideProps(context) {
   }
 
   const { data: combustibles } = await axios.get(
-    `${process.env.MI_IP_BACKEND}/api/combustible`
+    `${process.env.MI_IP_BACKEND}/api/combustible`,
+    {
+      withCredentials: true,
+    }
   );
   return {
     props: {
