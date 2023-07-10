@@ -23,6 +23,7 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { DatePicker } from "@mui/x-date-pickers";
+import Head from "next/head";
 
 function index() {
   const router = useRouter();
@@ -78,6 +79,12 @@ function index() {
   };
 
   return (
+    <>
+    <Head>
+      <title>
+        Distribución estadístico
+      </title>
+    </Head>
     <MiniDrawer>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem", mb: "1rem",display:"flex",justifyContent:"center" }}>
@@ -140,6 +147,7 @@ function index() {
         />
       </SpeedDial>
     </MiniDrawer>
+    </>
   );
 }
 

@@ -34,7 +34,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
 import BusinessIcon from "@mui/icons-material/Business";
-import TableRowsIcon from "@mui/icons-material/TableRows";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const drawerWidth = 240;
 
@@ -476,7 +476,7 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <TableRowsIcon
+                      <AssignmentIcon
                         color={
                           router.pathname.split("/")[1] == "distribucion" &&
                           router.pathname.split("/")[2] == "listar"

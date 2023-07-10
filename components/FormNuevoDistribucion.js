@@ -268,18 +268,6 @@ function FormNuevoDistribucion() {
           </form>
         </Card>
 
-        {router.query.id && (
-          <Card sx={{ textAlign: "center", mt: "1.5rem", p: "1rem" }}>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={handleClickOpen}
-            >
-              Eliminar
-            </Button>
-          </Card>
-        )}
       </Container>
     </>
   );

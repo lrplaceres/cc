@@ -57,7 +57,7 @@ function VistaTablero() {
       <Card sx={{ flexGrow: 1,p:"1rem"}}>
         <Grid container spacing={1}>
           <Grid item xs={3}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label={"Seleccionar mes"}
                 views={["year", "month"]}
