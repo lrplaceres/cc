@@ -20,6 +20,10 @@ import DoneIcon from "@mui/icons-material/Done";
 import axios from "axios";
 import Head from "next/head";
 import bcrypt from "bcryptjs";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 function FormNuevoUsuario() {
   const router = useRouter();
@@ -37,6 +41,10 @@ function FormNuevoUsuario() {
   });
 
   const [entidades, setEntidades] = useState([]);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleChange = ({ target: { name, value } }) => {
     setUsuario({ ...usuario, [name]: value });
@@ -153,7 +161,6 @@ function FormNuevoUsuario() {
               id="contrasena"
               label="Constraseña"
               onChange={handleChange}
-              type="password"
               name="contrasena"
               minLength={6}
               maxLength={35}
@@ -161,13 +168,26 @@ function FormNuevoUsuario() {
               required
               fullWidth
               value={usuario.contrasena}
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={{ mb: ".5rem" }}
             />
             <TextField
               id="repite"
               label="Verifique Constraseña"
               onChange={handleChange}
-              type="password"
               name="repite"
               minLength={6}
               maxLength={35}
@@ -175,6 +195,20 @@ function FormNuevoUsuario() {
               required
               fullWidth
               value={usuario.contrasena ? usuario.repite : ""}
+              type={showPassword ? "text" : "password"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={{ mb: ".5rem" }}
             />
 

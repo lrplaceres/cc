@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import {
-  DateCalendar,
+  DatePicker,
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 import "dayjs/locale/es";
@@ -13,7 +13,16 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Alert, Card, Container, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Card,
+  Container,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
 import moment from "moment";
@@ -76,19 +85,31 @@ function listar() {
   return (
     <>
       <MiniDrawer>
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-          <DateCalendar
-            views={["year", "month"]}
-            openTo="year"
-            minDate={dayjs("2023-07-01")}
-            maxDate={dayjs("2025-12-12")}
-            onChange={(newValue) => {
-              buscarDistribucionMes(newValue.year(), newValue.month() + 1);
-              setAnno(newValue.year());
-              setMes(newValue.month() + 1);
+        <Container maxWidth="sm">
+          <Card
+            sx={{
+              p: "1rem",
+              mb: "1rem",
+              display: "flex",
+              justifyContent: "center",
             }}
-          />
-        </LocalizationProvider>
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+              <DatePicker
+                label={"Seleccionar mes"}
+                views={["year", "month"]}
+                openTo="year"
+                minDate={dayjs("2023-07-01")}
+                maxDate={dayjs("2026-12-12")}
+                onChange={(newValue) => {
+                  buscarDistribucionMes(newValue.year(), newValue.month() + 1);
+                  setAnno(newValue.year());
+                  setMes(newValue.month() + 1);
+                }}
+              />
+            </LocalizationProvider>
+          </Card>
+        </Container>
 
         {distribucion.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>

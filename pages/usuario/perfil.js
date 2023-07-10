@@ -2,6 +2,8 @@ import MiniDrawer from "@/components/drawer";
 import { Card, Container, Typography, TextField } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
 function perfil() {
   const { data: session, status } = useSession();
@@ -51,3 +53,19 @@ function perfil() {
 }
 
 export default perfil;
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}

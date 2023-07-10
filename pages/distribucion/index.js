@@ -2,13 +2,12 @@ import MiniDrawer from "@/components/drawer";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import "dayjs/locale/es";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import {
   Alert,
   Card,
@@ -23,6 +22,7 @@ import { useRouter } from "next/router";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { DatePicker } from "@mui/x-date-pickers";
 
 function index() {
   const router = useRouter();
@@ -60,7 +60,7 @@ function index() {
       field: "restante",
       headerName: "Restante",
       valueGetter: restante,
-    }
+    },
   ];
 
   const buscarAsignacionesMes = async (anno, mes) => {
@@ -79,19 +79,27 @@ function index() {
 
   return (
     <MiniDrawer>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
-        <DateCalendar
-          views={["year", "month"]}
-          openTo="year"
-          minDate={dayjs("2023-07-01")}
-          maxDate={dayjs("2025-12-12")}
-          onChange={(newValue) => {
-            buscarAsignacionesMes(newValue.year(), newValue.month() + 1);
-            setAnno(newValue.year());
-            setMes(newValue.month() + 1);
-          }}
-        />
-      </LocalizationProvider>
+      <Container maxWidth="sm">
+        <Card sx={{ p: "1rem", mb: "1rem",display:"flex",justifyContent:"center" }}>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="es"
+          >
+            <DatePicker
+              label={"Seleccionar mes"}
+              views={["year", "month"]}
+              openTo="year"
+              minDate={dayjs("2023-07-01")}
+              maxDate={dayjs("2026-12-12")}
+              onChange={(newValue) => {
+                buscarAsignacionesMes(newValue.year(), newValue.month() + 1);
+                setAnno(newValue.year());
+                setMes(newValue.month() + 1);
+              }}
+            />
+          </LocalizationProvider>
+        </Card>
+      </Container>
 
       {asignado.length === 0 ? (
         <Stack sx={{ width: "100%" }} spacing={2}>

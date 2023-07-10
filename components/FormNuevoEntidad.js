@@ -166,7 +166,7 @@ function FormNuevoEntidad() {
               type="reset"
               startIcon={<CancelIcon />}
               sx={{ mr: "0.5rem" }}
-              onClick={() => router.push("/despacho")}
+              onClick={() => router.push("/entidad")}
             >
               Cancelar
             </Button>

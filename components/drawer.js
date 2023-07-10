@@ -34,7 +34,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
 import BusinessIcon from "@mui/icons-material/Business";
-import TableRowsIcon from '@mui/icons-material/TableRows';
+import TableRowsIcon from "@mui/icons-material/TableRows";
 
 const drawerWidth = 240;
 
@@ -133,11 +133,7 @@ export default function MiniDrawer({ children }) {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="icon"
-          href="/fondo_azul.png"
-          sizes="any"
-        />
+        <link rel="icon" href="/fondo_azul.png" sizes="any" />
       </Head>
 
       <Box sx={{ display: "flex" }}>
@@ -186,7 +182,7 @@ export default function MiniDrawer({ children }) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={()=>router.push("/usuario/perfil")}>
+                  <MenuItem onClick={() => router.push("/usuario/perfil")}>
                     <PersonIcon />
                     <Typography textAlign="center">Perfil</Typography>
                   </MenuItem>
@@ -235,7 +231,9 @@ export default function MiniDrawer({ children }) {
                     justifyContent: "center",
                   }}
                 >
-                  <LeaderboardIcon color="primary" />
+                  <LeaderboardIcon
+                    color={router.pathname == "/" ? "primary" : ""}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary="Tablero"
@@ -265,7 +263,13 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <OilBarrelIcon />
+                      <OilBarrelIcon
+                        color={
+                          router.pathname.split("/")[1] == "combustible"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Combustible"
@@ -294,7 +298,13 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <CalendarMonthIcon />
+                      <CalendarMonthIcon
+                        color={
+                          router.pathname.split("/")[1] == "despacho"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Despacho"
@@ -323,7 +333,13 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <BusinessIcon />
+                      <BusinessIcon
+                        color={
+                          router.pathname.split("/")[1] == "entidad"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Entidad"
@@ -352,7 +368,13 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <LocalGasStationIcon />
+                      <LocalGasStationIcon
+                        color={
+                          router.pathname.split("/")[1] == "asignacion"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Asignación"
@@ -381,7 +403,13 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <ManageAccountsIcon />
+                      <ManageAccountsIcon
+                        color={
+                          router.pathname.split("/")[1] == "usuario"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Usuarios"
@@ -392,7 +420,7 @@ export default function MiniDrawer({ children }) {
               </>
             ) : (
               <>
-              <ListItem
+                <ListItem
                   disablePadding
                   sx={{ display: "block" }}
                   onClick={() => router.push("/distribucion")}
@@ -405,17 +433,24 @@ export default function MiniDrawer({ children }) {
                     }}
                   >
                     <ListItemIcon
-                      title="Asignación"
+                      title="Distribución"
                       sx={{
                         minWidth: 0,
                         mr: open ? 3 : "auto",
                         justifyContent: "center",
                       }}
                     >
-                      <LocalGasStationIcon />
+                      <LocalGasStationIcon
+                        color={
+                          router.pathname.split("/")[1] == "distribucion" &&
+                          !router.pathname.split("/")[2]
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Asignación"
+                      primary="Distribución"
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -441,7 +476,14 @@ export default function MiniDrawer({ children }) {
                         justifyContent: "center",
                       }}
                     >
-                      <TableRowsIcon />
+                      <TableRowsIcon
+                        color={
+                          router.pathname.split("/")[1] == "distribucion" &&
+                          router.pathname.split("/")[2] == "listar"
+                            ? "primary"
+                            : ""
+                        }
+                      />
                     </ListItemIcon>
                     <ListItemText
                       primary="Listar"
@@ -450,9 +492,6 @@ export default function MiniDrawer({ children }) {
                   </ListItemButton>
                 </ListItem>
               </>
-
-                
-
             )}
           </List>
         </Drawer>
