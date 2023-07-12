@@ -5,18 +5,25 @@ import { getServerSession } from "next-auth/next";
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
-  const origen= req.headers.host;
+  const origen = req.headers.host;
   const expresion = /[^(localhost)]/;
-  if(!origen.search(expresion)){
-    if (!session || session.rol != "superadmin") {
+  if (!origen.search(expresion)) {
+    if (!session) {
       res.status(403).json({ message: "Por favor, contacte al administrador" });
       return;
     }
-  }  
-
+  }
 
   switch (req.method) {
     case "POST":
+      if (!origen.search(expresion)) {
+        if (session.rol != "superadmin") {
+          res
+            .status(403)
+            .json({ message: "Por favor, contacte al administrador" });
+          return;
+        }
+      }
       return await adicionarCombustible(req, res);
     default:
       return await obtenerTodoscombustibles(req, res);

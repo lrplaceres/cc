@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const origen= req.headers.host;
   const expresion = /[^(localhost)]/;
   if(!origen.search(expresion)){
-    if (!session || session.rol != "superadmin") {
+    if (!session) {
       res.status(403).json({ message: "Por favor, contacte al administrador" });
       return;
     }
@@ -16,6 +16,12 @@ export default async function handler(req, res) {
   
   switch (req.method) {
     case "POST":
+      if(!origen.search(expresion)){
+        if (session.rol != "superadmin") {
+          res.status(403).json({ message: "Por favor, contacte al administrador" });
+          return;
+        }
+      } 
       return await adicionarEntidad(req, res);
     default:
       return await obtenerTodosEntidades(req, res);

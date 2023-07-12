@@ -34,7 +34,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
 import BusinessIcon from "@mui/icons-material/Business";
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import Image from "next/image";
 
 const drawerWidth = 240;
 
@@ -156,8 +157,16 @@ export default function MiniDrawer({ children }) {
               variant="h6"
               noWrap
               component="div"
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
             >
+              <Image
+                src={`/Horus.png`}
+                width={50}
+                height={35}
+                alt="logo horus"
+                placeholder="blur"
+                blurDataURL={"/Horus.png"}
+              />
               {process.env.NEXT_PUBLIC_NAME_APP}
             </Typography>
 

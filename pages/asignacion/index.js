@@ -14,7 +14,6 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import axios from "axios";
-import Link from "next/link";
 import moment from "moment";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -51,7 +50,7 @@ function index({ asignaciones }) {
       headerName: "Acciones",
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<EditNoteIcon />}
+          icon={<EditNoteIcon color="primary"/>}
           label="Editar"
           onClick={() => router.push(`/asignacion/${params.row.id}`)}
           showInMenu
