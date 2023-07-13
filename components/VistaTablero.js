@@ -29,7 +29,7 @@ function VistaTablero() {
 
   const [mes, setMes] = useState();
 
-  const [combustibles, setCombustibles] = useState([]);
+  const [filtroEntidad, setFiltroEntidad] = useState();
 
   const [entidades, setEntidades] = useState([]);
 
@@ -37,8 +37,11 @@ function VistaTablero() {
 
   const [asignacionDetallada, setAsignacionDetallada] = useState([]);
 
+  const [distribucionEstadistica, setDistribucionEstadistica] = useState([]);
+
+  const [distribucionDetallada, setDistribucionDetallada] = useState([]);
+
   useEffect(() => {
-    obtenerCombustibles();
     obtenerEntidades();
   }, []);
 
@@ -51,18 +54,12 @@ function VistaTablero() {
     }
   };
 
-  const obtenerCombustibles = async () => {
+  const buscarxFiltroFecha = async (
+    anno = anno,
+    mes = mes,
+    identidad = session?.identidad
+  ) => {
     try {
-      const { data } = await axios.get("/api/combustible/");
-      setCombustibles(data);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const buscarxFiltroFecha = async (anno, mes) => {
-    try {
-      var identidad = session?.identidad;
       const { data } = await axios.post("/api/asignacion/xMesxEntidad", {
         identidad,
         anno,
@@ -74,9 +71,11 @@ function VistaTablero() {
     }
   };
 
-  const buscarxCombustible = async (combustible) => {
+  const buscarxCombustible = async (
+    combustible,
+    identidad = session?.identidad
+  ) => {
     try {
-      var identidad = session?.identidad;
       const { data } = await axios.post(
         "/api/asignacion/xMesxEntidadNoAgrupado",
         {
@@ -87,6 +86,50 @@ function VistaTablero() {
         }
       );
       setAsignacionDetallada(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const buscarDistribucionEstadistica = async (
+    anno = anno,
+    mes = mes,
+    identidad = session?.identidad,
+    combustible
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "/api/asignacion/buscarAsignadoMesxCombustible",
+        {
+          anno,
+          mes,
+          identidad,
+          combustible,
+        }
+      );
+      setDistribucionEstadistica(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const buscarDistribucionDetallada = async (
+    anno = anno,
+    mes = mes,
+    identidad = session?.identidad,
+    combustible
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "/api/asignacion/xMesxDistribucionxEntidadesSubordinadasxCombustible",
+        {
+          anno,
+          mes,
+          identidad,
+          combustible,
+        }
+      );
+      setDistribucionDetallada(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -111,11 +154,63 @@ function VistaTablero() {
     },
   ];
 
+  const restante = (params) => {
+    return `${
+      Number.parseInt(params.row.cantidad) -
+      Number.parseInt(params.row.distribuido)
+    }`;
+  };
+
+  const columnsEstadistica = [
+    {
+      field: "nombre",
+      headerName: "Combustible",
+      width: 160,
+    },
+    {
+      field: "cantidad",
+      headerName: "Cantidad",
+    },
+    {
+      field: "distribuido",
+      headerName: "Distribuido",
+    },
+    {
+      field: "restante",
+      headerName: "Restante",
+      valueGetter: restante,
+    },
+  ];
+
+  const columnsDetallado = [
+    {
+      field: "fecha",
+      headerName: "Fecha",
+      renderCell: (params) => (
+        <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
+      ),
+    },
+    {
+      field: "combustible",
+      headerName: "Combustible",
+      width: 160,
+    },
+    {
+      field: "cantidad",
+      headerName: "Cantidad",
+    },
+    {
+      field: "entidad",
+      headerName: "Entidad",
+      width: 250,
+    },
+  ];
+
   return (
     <>
       <Card sx={{ p: "1rem", mb: ".5rem" }}>
         <Grid container spacing={1}>
-          <Grid item xs>
+          <Grid item xs={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
                 label={"Seleccionar mes"}
@@ -124,7 +219,18 @@ function VistaTablero() {
                 minDate={dayjs("2023-07-01")}
                 maxDate={dayjs("2026-12-12")}
                 onChange={(newValue) => {
-                  buscarxFiltroFecha(newValue.year(), newValue.month() + 1);
+                  {
+                    filtroEntidad
+                      ? buscarxFiltroFecha(
+                          newValue.year(),
+                          newValue.month() + 1,
+                          filtroEntidad
+                        )
+                      : buscarxFiltroFecha(
+                          newValue.year(),
+                          newValue.month() + 1
+                        );
+                  }
                   setAnno(newValue.year());
                   setMes(newValue.month() + 1);
                   setAsignacionDetallada([]);
@@ -133,58 +239,53 @@ function VistaTablero() {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Tipo de Combustible
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                name="combustible"
-                label="Tipo de Combustible"
-                //onChange={handleChange}
-              >
-                <MenuItem value="" selected>
-                  <em>None</em>
-                </MenuItem>
-                {combustibles.map((comb, index) => (
-                  <MenuItem key={index.toString()} value={comb.id}>
-                    {comb.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Entidad</InputLabel>
-              <Select
-                labelId="demo-simple-select-label2"
-                id="demo-simple-select2"
-                name="entidad"
-                label="Entidad"
-                //onChange={handleChange}
-                sx={{ mb: ".5rem" }}
-              >
-                <MenuItem value="" selected>
-                  <em>None</em>
-                </MenuItem>
-                {entidades.map((ent, index) => (
-                  <MenuItem key={index.toString()} value={ent.id}>
-                    {ent.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+
+          {(session?.rol == "superadmin" || session?.rol == "usuario") && (
+            <>
+              <Grid item xs>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Entidad</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label2"
+                    id="demo-simple-select2"
+                    name="entidad"
+                    label="Entidad"
+                    onChange={(e) => {
+                      buscarxFiltroFecha(anno, mes, e.target.value);
+                      setFiltroEntidad(e.target.value);
+                      setAsignacionDetallada([]);
+                    }}
+                    sx={{ mb: ".5rem" }}
+                    disabled={!mes || !anno}
+                  >
+                    <MenuItem value="" selected>
+                      <em>None</em>
+                    </MenuItem>
+                    {entidades.map((ent, index) => (
+                      <MenuItem key={index.toString()} value={ent.id}>
+                        {ent.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Card>
 
       {asignacionGeneral.length === 0 ? (
         <>
           <Stack sx={{ width: "100%", mb: ".5rem" }} spacing={2}>
-            <Alert severity="info">Seleccione la fecha</Alert>
+            {!asignacionGeneral.length && !anno ? (
+              <>
+                <Alert severity="info">Seleccione la fecha</Alert>
+              </>
+            ) : (
+              <Alert severity="info">
+                No existe información para su entidad en la fecha seleccionada
+              </Alert>
+            )}
           </Stack>
           <Grid container spacing={2}>
             <Grid item xs>
@@ -225,8 +326,40 @@ function VistaTablero() {
                   flexDirection: "column",
                   justifyContent: "space-between",
                   mb: ".5rem",
+                  cursor: "pointer",
                 }}
-                onClick={() => buscarxCombustible(asignacion.combustible)}
+                onClick={() => {
+                  filtroEntidad
+                    ? (buscarxCombustible(
+                        asignacion.combustible,
+                        filtroEntidad
+                      ),
+                      buscarDistribucionEstadistica(
+                        anno,
+                        mes,
+                        filtroEntidad,
+                        asignacion.combustible
+                      ),
+                      buscarDistribucionDetallada(
+                        anno,
+                        mes,
+                        filtroEntidad,
+                        asignacion.combustible
+                      ))
+                    : (buscarxCombustible(asignacion.combustible),
+                      buscarDistribucionEstadistica(
+                        anno,
+                        mes,
+                        null,
+                        asignacion.combustible
+                      ),
+                      buscarDistribucionDetallada(
+                        anno,
+                        mes,
+                        null,
+                        asignacion.combustible
+                      ));
+                }}
               >
                 <Typography variant="body1" color="primary" align="center">
                   {asignacion.nombre}
@@ -242,34 +375,79 @@ function VistaTablero() {
 
       {asignacionDetallada.length === 0 ? (
         <>
-          <Grid container spacing={2} sx={{mt:".5rem"}}>
+          <Grid container spacing={2} sx={{ mt: ".5rem" }}>
             <Grid item xs>
-              <Skeleton
-                animation="pulse"
-                variant="rectangular"
-              />
+              <Skeleton animation="pulse" variant="rectangular" />
             </Grid>
           </Grid>
         </>
       ) : (
         <>
-          <Card sx={{ p: "1rem" }}>
-            <Typography variant="h6" color="primary" align="center" mb={2}>
-              MIS ASIGNACIONES
-            </Typography>
-            <DataGrid
-              rows={asignacionDetallada}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 10,
-                  },
-                },
-              }}
-              pageSizeOptions={[10]}
-            />
-          </Card>
+          <Grid container spacing={2}>
+            <Grid item xs>
+              <Card sx={{ p: "1rem" }}>
+                <Typography variant="h6" color="primary" align="center" mb={2}>
+                  ASIGNACIONES
+                </Typography>
+                <DataGrid
+                  rows={asignacionDetallada}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[10]}
+                />
+              </Card>
+            </Grid>
+
+            <Grid item xs>
+              <Card sx={{ p: "1rem" }}>
+                <Typography variant="h6" color="primary" align="center" mb={2}>
+                  DISTRIBUCIONES
+                </Typography>
+                <DataGrid
+                  rows={distribucionEstadistica}
+                  columns={columnsEstadistica}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[10]}
+                  getRowId={(row) => row.nombre}
+                />
+              </Card>
+            </Grid>
+          </Grid>
+
+          {distribucionDetallada.length > 0 && (
+            <>
+              <Grid container spacing={2} sx={{ mt: ".5rem" }}>
+                <Grid item xs>
+                  <Card sx={{ p: "1rem" }}>
+                    <DataGrid
+                      rows={distribucionDetallada}
+                      columns={columnsDetallado}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
+                    />
+                  </Card>
+                </Grid>
+              </Grid>
+            </>
+          )}
         </>
       )}
     </>

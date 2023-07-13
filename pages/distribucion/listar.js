@@ -71,9 +71,7 @@ function listar() {
       field: "fecha",
       headerName: "Fecha",
       renderCell: (params) => (
-        //<Link href={`/distribucion/${params.row.id}`} className="decoration-none">
         <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
-        // </Link>
       ),
     },
     {
