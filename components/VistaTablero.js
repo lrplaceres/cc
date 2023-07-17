@@ -240,37 +240,6 @@ function VistaTablero() {
             </LocalizationProvider>
           </Grid>
 
-          {(session?.rol == "superadmin" || session?.rol == "usuario") && (
-            <>
-              <Grid item xs>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Entidad</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label2"
-                    id="demo-simple-select2"
-                    name="entidad"
-                    label="Entidad"
-                    onChange={(e) => {
-                      buscarxFiltroFecha(anno, mes, e.target.value);
-                      setFiltroEntidad(e.target.value);
-                      setAsignacionDetallada([]);
-                    }}
-                    sx={{ mb: ".5rem" }}
-                    disabled={!mes || !anno}
-                  >
-                    <MenuItem value="" selected>
-                      <em>None</em>
-                    </MenuItem>
-                    {entidades.map((ent, index) => (
-                      <MenuItem key={index.toString()} value={ent.id}>
-                        {ent.nombre}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-            </>
-          )}
         </Grid>
       </Card>
 
