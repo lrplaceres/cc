@@ -1,28 +1,32 @@
 import MiniDrawer from "@/components/drawer";
-import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
-import VistaTablero from "@/components/VistaTablero";
+import FormNuevoAutorizo from "@/components/FormNuevoAutorizo";
 
-function index({ entidadDefault }) {
+function nuevo() {
   return (
     <>
-      <Head>
-        <title>Tablero</title>
-      </Head>
       <MiniDrawer>
-        <VistaTablero entidadDefault={entidadDefault} />
+        <FormNuevoAutorizo />
       </MiniDrawer>
     </>
   );
 }
 
-export default index;
+export default nuevo;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  if (session.rol != "superadmin") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
-    props: { entidadDefault: session.identidad },
+    props: {},
   };
 }

@@ -3,11 +3,11 @@ import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 
-function nuevo() {
+function nuevo({entidadDefault}) {
   return (
     <>
       <MiniDrawer>
-        <FormNuevoDistribucion />
+        <FormNuevoDistribucion entidadDefault={entidadDefault}/>
       </MiniDrawer>
     </>
   );
@@ -27,6 +27,8 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {},
+    props: {
+      entidadDefault: session.identidad,
+    },
   };
 }

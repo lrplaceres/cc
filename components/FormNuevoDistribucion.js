@@ -5,11 +5,6 @@ import {
   Button,
   Card,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -29,10 +24,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import moment from "moment";
 import "dayjs/locale/es";
-import { DateCalendar, DatePicker } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import { useSession } from "next-auth/react";
 
-function FormNuevoDistribucion() {
+function FormNuevoDistribucion({ entidadDefault }) {
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -42,48 +37,82 @@ function FormNuevoDistribucion() {
     combustible: "",
     cantidad: "",
     entidad: "",
+    prioridad: "",
+    observaciones: "",
   });
 
   const [fecha, setFecha] = useState();
 
   const [entidades, setEntidades] = useState([]);
 
-  const handleChange = ({ target: { name, value } }) => {
-    setAsignacion({ ...asignacion, [name]: value });
-  };
+  const [autorizado, setAutorizado] = useState([]);
 
-  const [asignado, setAsignado] = useState([]);
+  const [distribucion, setDistribucion] = useState([]);
+
+  const [combustibleTemporal, setCombustibleTemporal] = useState("");
+
+  const [totalDistribuido, setTotalDistribuido] = useState(0);
+
+  const [totalAutorizo, setTotalAutorizo] = useState(0);
+
+  const [totalRedistribuido, setTotalRedistribuido] = useState(0);
 
   const [anno, setAnno] = useState();
 
   const [mes, setMes] = useState();
 
-  const [total, setTotal] = useState(0);
+  const [maximoValor, setMaximoValor] = useState(0);
 
-  const [distribuido, setDistribuido] = useState(0);
+  const handleChange = ({ target: { name, value } }) => {
+    setAsignacion({ ...asignacion, [name]: value });
+  };
 
   useEffect(() => {
     obtenerEntidades();
   }, []);
 
-  const buscarAsignacionesMes = async (anno, mes) => {
+  const buscarCombustiblesAutorizadosMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
     try {
-      var identidad = session?.identidad;
-      const { data } = await axios.post("/api/asignacion/buscarAsignadoMes", {
-        anno,
-        mes,
-        identidad,
-      });
-      setAsignado(data);
-      obtenerEntidades();
+      const { data } = await axios.post(
+        "/api/distribucion/buscarAutorizosMes",
+        {
+          anno,
+          mes,
+          identidad,
+        }
+      );
+      setAutorizado(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const obtenerEntidades = async () => {
+  const buscarCombustiblesDistribuidosMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
     try {
-      var identidad = session?.identidad;
+      const { data } = await axios.post(
+        "/api/distribucion/buscarDistribucionEstadisticaaEntidad",
+        {
+          anno,
+          mes,
+          identidad,
+        }
+      );
+      setDistribucion(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const obtenerEntidades = async (identidad = entidadDefault) => {
+    try {
       const { data } = await axios.post(`/api/entidad/subordinados`, {
         identidad,
       });
@@ -93,31 +122,57 @@ function FormNuevoDistribucion() {
     }
   };
 
-  const obtenerCombustibleTotalXmes = async ({ target: { value } }) => {
+  const obtenerDistribucionMesCombustibleTotal = async ({
+    target: { value },
+  }) => {
     try {
       var identidad = session?.identidad;
-      const { data } = await axios.post("/api/asignacion/xMesxCombustiblexEntidad", {
-        identidad,
-        value,
-        mes,
-        anno
-      });
-      setTotal(data);
+      const { data } = await axios.post(
+        "/api/distribucion/buscarDistribucionEntidadCombustible",
+        {
+          identidad,
+          value,
+          mes,
+          anno,
+        }
+      );
+      setTotalDistribuido(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
-  }; 
-  
-  const obtenerCombustibleDistribuidoXmes = async ({ target: { value } }) => {
+  };
+
+  const obtenerAutorizosMesCombustibleTotal = async ({ target: { value } }) => {
     try {
       var identidad = session?.identidad;
-      const { data } = await axios.post("/api/asignacion/xMesxCombustiblexEntidadesSubordinadas", {
-        identidad,
-        value,
-        mes,
-        anno
-      });
-      setDistribuido(data);
+      const { data } = await axios.post(
+        "/api/distribucion/buscarAutorizoMesEntidadCombustible",
+        {
+          identidad,
+          value,
+          mes,
+          anno,
+        }
+      );
+      setTotalAutorizo(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const obtenerRedistribuidoMesCombustible = async ({ target: { value } }) => {
+    try {
+      var identidad = session?.identidad;
+      const { data } = await axios.post(
+        "/api/distribucion/buscarDistribucionEntidadesSubordinadasCombustible",
+        {
+          identidad,
+          value,
+          mes,
+          anno,
+        }
+      );
+      setTotalRedistribuido(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -127,13 +182,13 @@ function FormNuevoDistribucion() {
     e.preventDefault();
     try {
       if (router.query.id) {
-        await axios.put(`/api/asignacion/${router.query.id}`, {
+        await axios.put(`/api/distribucion/${router.query.id}`, {
           asignacion,
           fecha,
         });
         toast.success("Se ha editado la asignacion");
       } else {
-        await axios.post("/api/asignacion", { asignacion, fecha });
+        await axios.post("/api/distribucion", { asignacion, fecha });
         toast.success("Se ha creado la asignacion");
       }
       setTimeout(() => router.push("/distribucion"), 250);
@@ -144,11 +199,14 @@ function FormNuevoDistribucion() {
 
   return (
     <>
+      <Head>
+        <title>Nueva Distribución</title>
+      </Head>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
             <Typography variant="h6" color="primary" align="center" mb={2}>
-              {router.query.id ? "EDITE" : "INGRESE"} LA DISTRIBUCIÓN
+              INGRESE LA DISTRIBUCIÓN
             </Typography>
 
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
@@ -159,10 +217,18 @@ function FormNuevoDistribucion() {
                     : ""
                 }
                 onChange={(newValue) => {
+                  buscarCombustiblesAutorizadosMes(
+                    newValue.year(),
+                    newValue.month() + 1
+                  );
+                  buscarCombustiblesDistribuidosMes(
+                    newValue.year(),
+                    newValue.month() + 1
+                  );
                   setFecha(newValue);
-                  buscarAsignacionesMes(newValue.year(), newValue.month() + 1);
                   setMes(newValue.month() + 1);
                   setAnno(newValue.year());
+                  setCombustibleTemporal("");
                 }}
                 format="YYYY-MM-DD"
                 minDate={dayjs("2023-07-01")}
@@ -179,22 +245,29 @@ function FormNuevoDistribucion() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 name="combustible"
-                value={asignacion.combustible}
+                value={combustibleTemporal}
                 label="Tipo de Combustible"
                 onChange={(e) => {
                   handleChange(e);
-                  obtenerCombustibleTotalXmes(e);
-                  obtenerCombustibleDistribuidoXmes(e)
+                  setCombustibleTemporal(e.target.value);
+                  obtenerRedistribuidoMesCombustible(e);
+                  obtenerDistribucionMesCombustibleTotal(e);
+                  obtenerAutorizosMesCombustibleTotal(e);
                 }}
                 required
-                readOnly={!asignado.length}
-                disabled={!asignado.length}
+                //disabled={!autorizado.length}
               >
-                {asignado.map((comb, index) => (
-                  <MenuItem key={index.toString()} value={comb.combustible}>
-                    {comb.nombre}
-                  </MenuItem>
-                ))}
+                {!!autorizado.length
+                  ? autorizado.map((comb, index) => (
+                      <MenuItem key={index.toString()} value={comb.combustible}>
+                        {comb.nombre}
+                      </MenuItem>
+                    ))
+                  : distribucion.map((comb, index) => (
+                      <MenuItem key={index.toString()} value={comb.combustible}>
+                        {comb.nombre}
+                      </MenuItem>
+                    ))}
               </Select>
             </FormControl>
 
@@ -229,16 +302,50 @@ function FormNuevoDistribucion() {
               fullWidth
               sx={{ mb: ".5rem" }}
               value={asignacion.cantidad}
-               readOnly={!asignado.length || !asignacion.combustible}
-              disabled={!asignado.length || !asignacion.combustible}
+              disabled={
+                !fecha || !asignacion.combustible || !asignacion.entidad
+              }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {total-distribuido}
+                    {!!autorizado.length
+                      ? totalAutorizo - totalRedistribuido
+                      : totalDistribuido - totalRedistribuido}
                   </InputAdornment>
                 ),
-                inputProps: { min: 1, max: total-distribuido },
+                inputProps: { min: 1, max: maximoValor },
               }}
+              onSelect={() =>
+                setMaximoValor(
+                  !!autorizado.length
+                    ? totalAutorizo - totalRedistribuido
+                    : totalDistribuido - totalRedistribuido
+                )
+              }
+            />
+
+            <TextField
+              id="prioridad"
+              label="Producto a priorizar"
+              name="prioridad"
+              required
+              fullWidth
+              sx={{ mb: ".5rem" }}
+              //value={}
+              onChange={handleChange}
+            />
+
+            <TextField
+              id="observaciones"
+              label="Observaciones"
+              name="observaciones"
+              required
+              fullWidth
+              multiline
+              rows={4}
+              sx={{ mb: ".5rem" }}
+              //value={}
+              onChange={handleChange}
             />
 
             <Button
@@ -259,7 +366,9 @@ function FormNuevoDistribucion() {
                 !asignacion.cantidad ||
                 !asignacion.combustible ||
                 !asignacion.entidad ||
-                !fecha
+                !fecha ||
+                !asignacion.prioridad ||
+                !asignacion.observaciones
               }
               startIcon={<DoneIcon />}
             >
@@ -267,7 +376,6 @@ function FormNuevoDistribucion() {
             </Button>
           </form>
         </Card>
-
       </Container>
     </>
   );

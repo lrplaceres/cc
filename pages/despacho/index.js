@@ -6,14 +6,15 @@ import {
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
-  Stack, Typography,
+  Stack,
+  Typography,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, esES } from "@mui/x-data-grid";
 import moment from "moment";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
@@ -52,13 +53,16 @@ function index({ despachos }) {
       <MiniDrawer>
         {despachos.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay despachos disponibles</Alert>
+            <Alert severity="info" variant="filled">No hay despachos disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="sm">
             <Card sx={{ p: "1rem" }}>
-            <Typography variant="h6" color="primary" align="center" mb={2}>DESPACHOS</Typography>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                DESPACHOS
+              </Typography>
               <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                 rows={despachos}
                 columns={columns}
                 initialState={{
@@ -102,7 +106,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  
+
   const { data: despachos } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/despacho`
   );

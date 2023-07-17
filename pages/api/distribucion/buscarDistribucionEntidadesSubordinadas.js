@@ -17,15 +17,17 @@ export default async function handler(req, res) {
       return;
   }
 }
-
+/*parametros: anno,mes,entidad
+*busca las distribuciones que ha hecho una entidad a sus subordinados
+*/
 const distribuidoxMes = async (req, res) => {
-  var { identidad, mes, anno, combustible } = req.body;
+  var { identidad, mes, anno } = req.body;
   try {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT b.uid as id, b.cantidad,b.fecha, c.nombre as combustible, e.nombre as entidad FROM asignacion b INNER JOIN combustible c ON b.combustible = c.uid INNER JOIN entidad e ON b.entidad = e.uid WHERE b.entidad IN (SELECT e.uid FROM entidad e WHERE e.subordinado = ? ) AND YEAR(b.fecha) = ? AND MONTH(b.fecha) = ? AND b.combustible = ? ORDER BY c.nombre ASC , e.nombre ASC",
-        [identidad, anno, mes, combustible]
+        "SELECT b.uid as id, b.cantidad,b.fecha, c.nombre as combustible, e.nombre as entidad FROM distribucion b INNER JOIN combustible c ON b.combustible = c.uid INNER JOIN entidad e ON b.entidad = e.uid WHERE b.entidad IN (SELECT e.uid FROM entidad e WHERE e.subordinado = ? ) AND YEAR(b.fecha) = ? AND MONTH(b.fecha) = ? ORDER BY c.nombre ASC , e.nombre ASC",
+        [identidad, anno, mes]
       );
     return res.status(200).json(result);
   } catch (error) {

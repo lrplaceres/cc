@@ -5,11 +5,6 @@ import {
   Button,
   Card,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   InputAdornment,
   InputLabel,
@@ -30,11 +25,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
 import "dayjs/locale/es";
+import { set } from "nprogress";
 
-function FormNuevoAsignacion() {
+function FormNuevoAutorizo() {
   const router = useRouter();
 
-  const [asignacion, setAsignacion] = useState({
+  const [autorizo, setAutorizo] = useState({
     uid: uuidv4(),
     combustible: "",
     cantidad: "",
@@ -45,66 +41,49 @@ function FormNuevoAsignacion() {
 
   const [combustibles, setCombustibles] = useState([]);
 
+  const [combustibleTemporal, setCombustibleTemporal] = useState("");
+
+  const [entidadTemporal, setEntidadTemporal] = useState("");
+
   const [entidades, setEntidades] = useState([]);
 
-  const [asignado, setAsignado] = useState(0);
+  const [autorizado, setAutorizado] = useState(0);
 
   const [despacho, setDespacho] = useState(0);
 
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleChange = ({ target: { name, value } }) => {
-    setAsignacion({ ...asignacion, [name]: value });
+    setAutorizo({ ...autorizo, [name]: value });
   };
 
   useEffect(() => {
     obtenerEntidades();
-    if (router.query.id) {
-      obtenerAsignacion();
-    }
   }, []);
-
-  const obtenerAsignacion = async () => {
-    try {
-      const { data } = await axios.get(`/api/asignacion/${router.query.id}`);
-      setAsignacion(data);
-      setFecha(data.fecha);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
 
   const obtenerCombustiblesXdia = async (dia) => {
     try {
       const { data } = await axios.post("/api/despacho/xdia", { dia });
       setCombustibles(data);
-      setAsignacion({ ...asignacion, ["combustible"]: "" });
+      setAutorizo({ ...autorizo, ["combustible"]: "" });
       setDespacho(0);
-      setAsignado(0);
+      setAutorizado(0);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const obtenerCombustibleAsignadoXdia = async ({ target: { value } }) => {
+  const obtenerCombustibleAutorizadoXdia = async (value) => {
     try {
-      const { data } = await axios.post("/api/asignacion/xfechaxcombustible", {
+      const { data } = await axios.post("/api/autorizo/xfechaxcombustible", {
         fecha,
         value,
       });
-      setAsignado(data);
+      setAutorizado(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const obtenerCombustibleDespachoXdia = async ({ target: { value } }) => {
+  const obtenerCombustibleDespachoXdia = async (value) => {
     try {
       const { data } = await axios.post("/api/despacho/sumaxdiaxfecha", {
         fecha,
@@ -128,27 +107,9 @@ function FormNuevoAsignacion() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (router.query.id) {
-        await axios.put(`/api/asignacion/${router.query.id}`, {
-          asignacion,
-          fecha,
-        });
-        toast.success("Se ha editado la asignacion");
-      } else {
-        await axios.post("/api/asignacion", { asignacion, fecha });
-        toast.success("Se ha creado la asignacion");
-      }
-      setTimeout(() => router.push("/asignacion"), 250);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const eliminarAsignacion = async (id) => {
-    try {
-      await axios.delete(`/api/asignacion/${id}`);
-      toast.success("Se ha eliminado la asignacion");
-      setTimeout(() => router.push("/asignacion"), 250);
+      await axios.post("/api/autorizo", { autorizo, fecha });
+      toast.success("Se ha creado el autorizo");
+      setTimeout(() => router.push("/autorizo"), 250);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -157,27 +118,21 @@ function FormNuevoAsignacion() {
   return (
     <>
       <Head>
-        <title>{router.query.id ? "Editar" : "Nueva"} asignación</title>
+        <title>Nuevo autorizo</title>
       </Head>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
           <form onSubmit={handleSubmit}>
-            <Typography
-               variant="h6" color="primary" align="center" mb={2}
-            >
-              {router.query.id ? "EDITE" : "INGRESE"} LA ASIGNACIÓN
+            <Typography variant="h6" color="primary" align="center" mb={2}>
+              INGRESE EL AUTORIZO
             </Typography>
 
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
-                value={
-                  router.query.id
-                    ? dayjs(moment(fecha).utc().format("YYYY-MM-DD"))
-                    : ""
-                }
                 onChange={(newValue) => {
                   setFecha(newValue);
                   obtenerCombustiblesXdia(newValue);
+                  setCombustibleTemporal("");
                 }}
                 format="YYYY-MM-DD"
                 sx={{ mb: ".5rem" }}
@@ -192,25 +147,27 @@ function FormNuevoAsignacion() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 name="combustible"
-                value={asignacion.combustible}
                 label="Tipo de Combustible"
                 onChange={(e) => {
                   handleChange(e);
-                  obtenerCombustibleAsignadoXdia(e);
-                  obtenerCombustibleDespachoXdia(e);
+                  obtenerCombustibleAutorizadoXdia(e.target.value);
+                  obtenerCombustibleDespachoXdia(e.target.value);
+                  setCombustibleTemporal(e.target.value);
                 }}
                 required
                 disabled={!combustibles.length}
+                value={combustibleTemporal}
               >
                 {combustibles.map((comb, index) => (
-                  <MenuItem key={index.toString()} value={comb.id}>
+                  <MenuItem
+                    key={index.toString()}
+                    value={comb.id}
+                  >
                     {comb.nombre}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-
-            <br />
 
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label2">Entidad</InputLabel>
@@ -218,11 +175,15 @@ function FormNuevoAsignacion() {
                 labelId="demo-simple-select-label2"
                 id="demo-simple-select2"
                 name="entidad"
-                value={asignacion.entidad}
                 label="Entidad"
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setEntidadTemporal(e.target.value);
+                }}
                 sx={{ mb: ".5rem" }}
+                value={entidadTemporal}
               >
+                
                 {entidades.map((ent, index) => (
                   <MenuItem key={index.toString()} value={ent.id}>
                     {ent.nombre}
@@ -240,15 +201,21 @@ function FormNuevoAsignacion() {
               required
               fullWidth
               sx={{ mb: ".5rem" }}
-              value={asignacion.cantidad}
-              disabled={!combustibles.length || !asignacion.combustible}
+              disabled={
+                !combustibles.length ||
+                !autorizo.combustible ||
+                despacho - autorizado == 0
+              }
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {router.query.id ? despacho : despacho - asignado}
+                    {despacho - autorizado}
                   </InputAdornment>
                 ),
-                inputProps: { min: 1, max: router.query.id ? despacho : despacho - asignado },
+                inputProps: {
+                  min: 1,
+                  max: despacho - autorizado,
+                },
               }}
             />
 
@@ -258,7 +225,7 @@ function FormNuevoAsignacion() {
               type="reset"
               startIcon={<CancelIcon />}
               sx={{ mr: ".5rem" }}
-              onClick={() => router.push("/asignacion")}
+              onClick={() => router.push("/autorizo")}
             >
               Cancelar
             </Button>
@@ -267,9 +234,9 @@ function FormNuevoAsignacion() {
               color="success"
               type="submit"
               disabled={
-                !asignacion.cantidad ||
-                !asignacion.combustible ||
-                !asignacion.entidad ||
+                !autorizo.cantidad ||
+                !autorizo.combustible ||
+                !autorizo.entidad ||
                 !fecha
               }
               startIcon={<DoneIcon />}
@@ -278,48 +245,9 @@ function FormNuevoAsignacion() {
             </Button>
           </form>
         </Card>
-
-        {router.query.id && (
-          <Card sx={{ textAlign: "center", mt: "1.5rem", p: "1rem" }}>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={handleClickOpen}
-            >
-              Eliminar
-            </Button>
-          </Card>
-        )}
       </Container>
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-      >
-        <DialogTitle>Eliminar asignación</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Al confirmar esta acción <strong>se borrarán los datos</strong>{" "}
-            relacionados.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => eliminarAsignacion(asignacion.uid)}
-          >
-            Aceptar
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }
 
-export default FormNuevoAsignacion;
+export default FormNuevoAutorizo;

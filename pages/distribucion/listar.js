@@ -3,7 +3,7 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import "dayjs/locale/es";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -32,12 +32,16 @@ import moment from "moment";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Head from "next/head";
 
-function listar() {
+function listar({entidadDefault}) {
   const router = useRouter();
 
   const { data: session, status } = useSession();
 
   const [distribucion, setDistribucion] = useState([]);
+
+  const [anno, setAnno] = useState(dayjs().year());
+
+  const [mes, setMes] = useState(dayjs().month() + 1);
 
   const [ideliminar, setIdeliminar] = useState();
 
@@ -49,11 +53,14 @@ function listar() {
     setOpen(false);
   };
 
-  const buscarDistribucionMes = async (anno, mes) => {
+  useEffect(() => {
+    buscarDistribucionMes(anno, mes, entidadDefault);
+  }, []);
+
+  const buscarDistribucionMes = async (anno, mes,identidad = session?.identidad) => {
     try {
-      var identidad = session.identidad;
       const { data } = await axios.post(
-        "/api/asignacion/xMesxDistribucionxEntidadesSubordinadas",
+        "/api/distribucion/buscarDistribucionEntidadesSubordinadas",
         {
           anno,
           mes,
@@ -108,9 +115,9 @@ function listar() {
 
   const eliminarDistribucion = async (id) => {
     try {
-      await axios.delete(`/api/asignacion/${id}`);
+      await axios.delete(`/api/distribucion/${id}`);
       toast.success("Se ha eliminado la distribución");
-      setDistribucion(distribucion.filter((item)=>item.id != ideliminar));
+      setDistribucion(distribucion.filter((item) => item.id != ideliminar));
       handleClose();
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
@@ -134,6 +141,7 @@ function listar() {
           >
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
+                defaultValue={dayjs(new Date())}
                 label={"Seleccionar mes"}
                 views={["year", "month"]}
                 openTo="year"
@@ -149,13 +157,13 @@ function listar() {
 
         {distribucion.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay distribuciones disponibles</Alert>
+            <Alert severity="info" variant="filled">No hay distribuciones disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
             <Card sx={{ p: "1rem" }}>
               <Typography variant="h6" color="primary" align="center" mb={2}>
-                DISTRIBUCIONES
+                REDISTRIBUCIONES
               </Typography>
               <DataGrid
                 rows={distribucion}
@@ -229,6 +237,8 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {},
+    props: {
+      entidadDefault: session.identidad,
+    },
   };
 }

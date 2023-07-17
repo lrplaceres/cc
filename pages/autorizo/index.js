@@ -1,8 +1,14 @@
 import MiniDrawer from "@/components/drawer";
 import {
   Alert,
+  Button,
   Card,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -12,15 +18,42 @@ import {
 import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, esES } from "@mui/x-data-grid";
 import axios from "axios";
 import moment from "moment";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-function index({ asignaciones }) {
+function index({ autorizos }) {
   const router = useRouter();
+
+  const [ideliminar, setIdeliminar] = useState();
+
+  const [autorizosFiltrados, setAutorizosFiltrados] = useState(autorizos);
+
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const eliminarAutorizo = async (id) => {
+    try {
+      await axios.delete(`/api/autorizo/${id}`);
+      toast.success("Se ha eliminado el autorizo");
+      setAutorizosFiltrados(
+        autorizosFiltrados.filter((item) => item.id != ideliminar)
+      );
+      handleClose();
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
 
   const columns = [
     {
@@ -50,9 +83,12 @@ function index({ asignaciones }) {
       headerName: "Acciones",
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<EditNoteIcon color="primary"/>}
-          label="Editar"
-          onClick={() => router.push(`/asignacion/${params.row.id}`)}
+          icon={<DeleteIcon color="error" />}
+          label="Eliminar"
+          onClick={() => {
+            handleClickOpen();
+            setIdeliminar(params.row.id);
+          }}
           showInMenu
         />,
       ],
@@ -62,21 +98,22 @@ function index({ asignaciones }) {
   return (
     <>
       <Head>
-        <title>Asignaciones</title>
+        <title>Autorizos</title>
       </Head>
       <MiniDrawer>
-        {asignaciones.length === 0 ? (
+        {autorizosFiltrados.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info" variant="filled">No hay asignaciones disponibles</Alert>
+            <Alert severity="info" variant="filled">No hay autorizos disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
             <Card sx={{ p: "1rem" }}>
               <Typography variant="h6" color="primary" align="center" mb={2}>
-                ASIGNACIONES
+                AUTORIZOS
               </Typography>
               <DataGrid
-                rows={asignaciones}
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={autorizosFiltrados}
                 columns={columns}
                 initialState={{
                   pagination: {
@@ -99,10 +136,36 @@ function index({ asignaciones }) {
           <SpeedDialAction
             icon={<AddBoxIcon />}
             tooltipTitle="Añadir"
-            onClick={() => router.push("/asignacion/nuevo")}
+            onClick={() => router.push("/autorizo/nuevo")}
           />
         </SpeedDial>
       </MiniDrawer>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+      >
+        <DialogTitle>Eliminar autorizo</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Al confirmar esta acción <strong>se borrarán los datos</strong>{" "}
+            relacionados.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => eliminarAutorizo(ideliminar)}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
@@ -120,12 +183,12 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const { data: asignaciones } = await axios.get(
-    `${process.env.MI_IP_BACKEND}/api/asignacion`
+  const { data: autorizos } = await axios.get(
+    `${process.env.MI_IP_BACKEND}/api/autorizo`
   );
   return {
     props: {
-      asignaciones,
+      autorizos,
     },
   };
 }

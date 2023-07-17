@@ -12,7 +12,7 @@ import {
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, esES } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -61,13 +61,16 @@ function index({ usuarios }) {
       <MiniDrawer>
         {usuarios.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay usuarios disponibles</Alert>
+            <Alert severity="info" variant="filled">No hay usuarios disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
             <Card sx={{ p: "1rem" }}>
-            <Typography variant="h6" color="primary" align="center" mb={2}>USUARIOS</Typography>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                USUARIOS
+              </Typography>
               <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                 rows={usuarios}
                 columns={columns}
                 initialState={{
@@ -111,7 +114,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  
+
   const { data: usuarios } = await axios.get(
     `${process.env.MI_IP_BACKEND}/api/usuario`
   );

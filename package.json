@@ -1,6 +1,6 @@
 {
   "name": "cc",
-  "version": "0.1.0",
+  "version": "0.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,8 @@
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.9",
+    "echarts": "^5.4.2",
+    "echarts-for-react": "^3.0.2",
     "moment": "^2.29.4",
     "mysql2": "^3.4.3",
     "next": "13.4.7",

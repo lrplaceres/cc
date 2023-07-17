@@ -12,20 +12,22 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case "POST":
-      return await asignadoxMes(req, res);
+      return await distribuidoxMes(req, res);
     default:
       return;
   }
 }
-
-const asignadoxMes = async (req, res) => {
-  var { identidad, mes, anno, combustible } = req.body;
+/*parametros: anno,mes,entidad
+ *busca la distribucion que le han hecho a una entidad 
+ */
+const distribuidoxMes = async (req, res) => {
+  var { identidad, mes, anno } = req.body;
   try {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT a.uid as id, a.combustible, a.cantidad, a.entidad, a.fecha, c.nombre FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid WHERE a.entidad = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? AND a.combustible = ? ORDER BY a.fecha DESC, a.cantidad DESC",
-        [identidad, anno, mes, combustible]
+        "SELECT COALESCE(SUM(w.cantidad),0) AS distribuido , c.nombre, w.combustible FROM distribucion w INNER JOIN combustible c ON w.combustible = c.uid WHERE w.entidad = ? AND YEAR(w.fecha) = ? AND MONTH(w.fecha) = ? GROUP BY w.combustible ORDER BY c.nombre ASC",
+        [identidad, anno, mes]
       );
     return res.status(200).json(result);
   } catch (error) {

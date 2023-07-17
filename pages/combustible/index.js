@@ -13,7 +13,7 @@ import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, esES } from "@mui/x-data-grid";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
@@ -45,7 +45,7 @@ function index({ combustibles }) {
       <MiniDrawer>
         {combustibles.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info">No hay combustibles disponibles</Alert>
+            <Alert severity="info" variant="filled">No hay combustibles disponibles</Alert>
           </Stack>
         ) : (
           <Container maxWidth="sm">
@@ -54,6 +54,7 @@ function index({ combustibles }) {
                 COMBUSTIBLES
               </Typography>
               <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                 rows={combustibles}
                 columns={columns}
                 initialState={{

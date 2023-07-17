@@ -250,6 +250,8 @@ export default function MiniDrawer({ children }) {
                 />
               </ListItemButton>
             </ListItem>
+
+            <Divider />
             {session?.rol == "superadmin" ? (
               <>
                 <ListItem
@@ -282,41 +284,6 @@ export default function MiniDrawer({ children }) {
                     </ListItemIcon>
                     <ListItemText
                       primary="Combustible"
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-
-                <ListItem
-                  disablePadding
-                  sx={{ display: "block" }}
-                  onClick={() => router.push("/despacho")}
-                >
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      title="Despacho"
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <CalendarMonthIcon
-                        color={
-                          router.pathname.split("/")[1] == "despacho"
-                            ? "primary"
-                            : ""
-                        }
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Despacho"
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
@@ -360,41 +327,6 @@ export default function MiniDrawer({ children }) {
                 <ListItem
                   disablePadding
                   sx={{ display: "block" }}
-                  onClick={() => router.push("/asignacion")}
-                >
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      title="Asignación"
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LocalGasStationIcon
-                        color={
-                          router.pathname.split("/")[1] == "asignacion"
-                            ? "primary"
-                            : ""
-                        }
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Asignación"
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-
-                <ListItem
-                  disablePadding
-                  sx={{ display: "block" }}
                   onClick={() => router.push("/usuario")}
                 >
                   <ListItemButton
@@ -426,6 +358,78 @@ export default function MiniDrawer({ children }) {
                     />
                   </ListItemButton>
                 </ListItem>
+
+                <Divider />
+
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/despacho")}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Despacho"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <CalendarMonthIcon
+                        color={
+                          router.pathname.split("/")[1] == "despacho"
+                            ? "primary"
+                            : ""
+                        }
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Despacho"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                  onClick={() => router.push("/autorizo")}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      title="Autorizo"
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <LocalGasStationIcon
+                        color={
+                          router.pathname.split("/")[1] == "autorizo"
+                            ? "primary"
+                            : ""
+                        }
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Autorizo"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
               </>
             ) : (
               <>
@@ -451,8 +455,9 @@ export default function MiniDrawer({ children }) {
                     >
                       <LocalGasStationIcon
                         color={
-                          router.pathname.split("/")[1] == "distribucion" &&
-                          !router.pathname.split("/")[2]
+                          (router.pathname.split("/")[1] == "distribucion" &&
+                          !router.pathname.split("/")[2]) || (router.pathname.split("/")[1] == "distribucion" &&
+                          router.pathname.split("/")[2] == "nuevo")
                             ? "primary"
                             : ""
                         }

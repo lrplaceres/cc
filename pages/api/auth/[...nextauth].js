@@ -5,6 +5,9 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return baseUrl
+    },
     async jwt({ token, user }) {
       // Persist the OAuth access_token to the token right after signin
       if (user) {

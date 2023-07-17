@@ -1,13 +1,13 @@
 import MiniDrawer from "@/components/drawer";
-import dayjs from "dayjs";
+import dayjs, { isDayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/es";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, esES } from "@mui/x-data-grid";
 import {
   Alert,
   Card,
@@ -25,16 +25,26 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { DatePicker } from "@mui/x-date-pickers";
 import Head from "next/head";
 
-function index() {
+function index({ entidadDefault }) {
   const router = useRouter();
 
   const { data: session, status } = useSession();
 
-  const [asignado, setAsignado] = useState([]);
+  const [autorizado, setAutorizado] = useState([]);
 
-  const [anno, setAnno] = useState();
+  const [redistribucion, setRedistribucion] = useState([]);
 
-  const [mes, setMes] = useState();
+  const [distribuido, setRedistribuido] = useState([]);
+
+  const [anno, setAnno] = useState(dayjs().year());
+
+  const [mes, setMes] = useState(dayjs().month() + 1);
+
+  useEffect(() => {
+    buscarAutorizosMes(anno, mes, entidadDefault);
+    buscarRedistribucionMes(anno, mes, entidadDefault);
+    buscarDistribuidoMes(anno, mes, entidadDefault);
+  }, []);
 
   const restante = (params) => {
     return `${
@@ -55,7 +65,7 @@ function index() {
     },
     {
       field: "distribuido",
-      headerName: "Distribuido",
+      headerName: "Redistribuido",
     },
     {
       field: "restante",
@@ -64,15 +74,85 @@ function index() {
     },
   ];
 
-  const buscarAsignacionesMes = async (anno, mes) => {
+  const columns2 = [
+    {
+      field: "nombre",
+      headerName: "Combustible",
+      width: 160,
+    },
+    {
+      field: "midistribucion",
+      headerName: "Redistribuido",
+    },
+  ];
+
+  const columns3 = [
+    {
+      field: "nombre",
+      headerName: "Combustible",
+      width: 160,
+    },
+    {
+      field: "distribuido",
+      headerName: "Distribuido",
+    },
+  ];
+
+  const buscarAutorizosMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
     try {
-      var identidad = session.identidad;
-      const { data } = await axios.post("/api/asignacion/buscarAsignadoMes", {
-        anno,
-        mes,
-        identidad,
-      });
-      setAsignado(data);
+      const { data } = await axios.post(
+        "/api/distribucion/buscarAutorizosMesEntidad",
+        {
+          anno,
+          mes,
+          identidad,
+        }
+      );
+      setAutorizado(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const buscarRedistribucionMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "/api/distribucion/buscarDistribucionEstadisticaEntidadesSubordinadas",
+        {
+          anno,
+          mes,
+          identidad,
+        }
+      );
+      setRedistribucion(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
+
+  const buscarDistribuidoMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "/api/distribucion/buscarDistribucionEstadisticaaEntidad",
+        {
+          anno,
+          mes,
+          identidad,
+        }
+      );
+      setRedistribuido(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
@@ -80,73 +160,132 @@ function index() {
 
   return (
     <>
-    <Head>
-      <title>
-        Distribución estadístico
-      </title>
-    </Head>
-    <MiniDrawer>
-      <Container maxWidth="sm">
-        <Card sx={{ p: "1rem", mb: "1rem",display:"flex",justifyContent:"center" }}>
-          <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            adapterLocale="es"
-          >
-            <DatePicker
-              label={"Seleccionar mes"}
-              views={["year", "month"]}
-              openTo="year"
-              minDate={dayjs("2023-07-01")}
-              maxDate={dayjs("2026-12-12")}
-              onChange={(newValue) => {
-                buscarAsignacionesMes(newValue.year(), newValue.month() + 1);
-                setAnno(newValue.year());
-                setMes(newValue.month() + 1);
-              }}
-            />
-          </LocalizationProvider>
-        </Card>
-      </Container>
-
-      {asignado.length === 0 ? (
-        <Stack sx={{ width: "100%" }} spacing={2}>
-          <Alert severity="info">No hay asignaciones disponibles</Alert>
-        </Stack>
-      ) : (
+      <Head>
+        <title>Distribución estadístico</title>
+      </Head>
+      <MiniDrawer>
         <Container maxWidth="sm">
-          <Card sx={{ p: "1rem" }}>
-            <Typography variant="h6" color="primary" align="center" mb={2}>
-              ASIGNACIONES
-            </Typography>
-            <DataGrid
-              rows={asignado}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 25,
-                  },
-                },
-              }}
-              pageSizeOptions={[25]}
-              getRowId={(row) => row.nombre}
-            />
+          <Card
+            sx={{
+              p: "1rem",
+              mb: ".5rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
+              <DatePicker
+                defaultValue={dayjs(new Date())}
+                label={"Seleccionar mes"}
+                views={["year", "month"]}
+                openTo="year"
+                minDate={dayjs("2023-07-01")}
+                maxDate={dayjs("2026-12-12")}
+                onChange={(newValue) => {
+                  buscarAutorizosMes(newValue.year(), newValue.month() + 1);
+                  buscarRedistribucionMes(
+                    newValue.year(),
+                    newValue.month() + 1
+                  );
+                  buscarDistribuidoMes(newValue.year(), newValue.month() + 1);
+                }}
+              />
+            </LocalizationProvider>
           </Card>
         </Container>
-      )}
 
-      <SpeedDial
-        ariaLabel="SpeedDial basic example"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-      >
-        <SpeedDialAction
-          icon={<AddBoxIcon />}
-          tooltipTitle="Añadir"
-          onClick={() => router.push("/distribucion/nuevo")}
-        />
-      </SpeedDial>
-    </MiniDrawer>
+        {!!autorizado.length && (
+          <Container maxWidth="sm">
+            <Card sx={{ p: "1rem", mb: ".5rem" }}>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                AUTORIZOS
+              </Typography>
+              <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={autorizado}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 25,
+                    },
+                  },
+                }}
+                pageSizeOptions={[25]}
+                getRowId={(row) => row.nombre}
+              />
+            </Card>
+          </Container>
+        )}
+
+        {distribuido.length === 0 ? (
+          <Stack sx={{ width: "100%" }} spacing={2} mb={1}>
+            <Alert severity="info" variant="filled">La entidad no tiene distribuciones en la fecha seleccionada</Alert>
+          </Stack>
+        ) : (
+          <Container maxWidth="sm">
+            <Card sx={{ p: "1rem" }}>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                DISTRIBUCIÓN
+              </Typography>
+              <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={distribuido}
+                columns={columns3}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 25,
+                    },
+                  },
+                }}
+                pageSizeOptions={[25]}
+                getRowId={(row) => row.nombre}
+              />
+            </Card>
+          </Container>
+        )}
+
+        {redistribucion.length === 0 ? (
+          <Stack sx={{ width: "100%" }} spacing={2} mt={1}>
+            <Alert severity="info" variant="filled">La entidad no tiene redistribuciones en la fecha seleccionada</Alert>
+          </Stack>
+        ) : (
+          <Container maxWidth="sm">
+            <Card sx={{ p: "1rem" }}>
+              <Typography variant="h6" color="primary" align="center" mb={2}>
+                REDISTRIBUCIÓN
+              </Typography>
+              <DataGrid
+                localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+                rows={redistribucion}
+                columns={columns2}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 25,
+                    },
+                  },
+                }}
+                pageSizeOptions={[25]}
+                getRowId={(row) => row.nombre}
+              />
+            </Card>
+          </Container>
+        )}
+
+        <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          icon={<SpeedDialIcon />}
+        >
+          <SpeedDialAction
+            icon={<AddBoxIcon />}
+            tooltipTitle="Añadir"
+            onClick={() => router.push("/distribucion/nuevo")}
+          />
+        </SpeedDial>
+      </MiniDrawer>
     </>
   );
 }
@@ -165,6 +304,8 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {},
+    props: {
+      entidadDefault: session.identidad,
+    },
   };
 }

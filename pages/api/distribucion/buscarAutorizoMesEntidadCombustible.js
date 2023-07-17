@@ -12,22 +12,24 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case "POST":
-      return await asignadoxMes(req, res);
+      return await buscarAutorizosMesEntidadCombustible(req, res);
     default:
       return;
   }
 }
-
-const asignadoxMes = async (req, res) => {
-  var { identidad, mes, anno } = req.body;
+/*parametros: anno,mes,entidad,value(combustible)
+ *busca las autorizos que han hecho a una entidad
+ */
+const buscarAutorizosMesEntidadCombustible = async (req, res) => {
+  var { anno, mes, identidad,value } = req.body;
   try {
     const [result] = await pool
       .promise()
       .query(
-        "SELECT SUM(a.cantidad) as asignado, c.nombre, a.combustible FROM asignacion a INNER JOIN combustible c ON a.combustible = c.uid WHERE a.entidad = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? GROUP BY a.combustible ORDER BY c.nombre",
-        [identidad, anno, mes]
+        "SELECT COALESCE(SUM(a.cantidad),0) as cantidad FROM autorizo a WHERE a.entidad = ? AND YEAR(a.fecha) = ? AND MONTH(a.fecha) = ? AND a.combustible = ? ",
+        [identidad, anno, mes,value]
       );
-    return res.status(200).json(result);
+    return res.status(200).json(result[0].cantidad);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

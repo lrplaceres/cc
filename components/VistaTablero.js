@@ -2,17 +2,18 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/es";
-import moment from "moment";
 import {
-  Alert,
+  Box,
   Card,
+  Fab,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
-  Skeleton,
-  Stack,
+  SwipeableDrawer,
   Typography,
+  TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
@@ -20,148 +21,109 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import { useSession } from "next-auth/react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, esES } from "@mui/x-data-grid";
+import GraficoCombustiblesAutorizados from "./GraficoCombustiblesAutorizados";
+import GraficosCombustiblesRedistribuidos from "./GraficosCombustiblesRedistribuidos";
+import GraficosCombustiblesDistribuidos from "./GraficosCombustiblesDistribuidos";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-function VistaTablero() {
+function VistaTablero({ entidadDefault }) {
   const { data: session, status } = useSession();
 
-  const [anno, setAnno] = useState();
+  const [anno, setAnno] = useState(dayjs().year());
 
-  const [mes, setMes] = useState();
+  const [mes, setMes] = useState(dayjs().month() + 1);
 
-  const [filtroEntidad, setFiltroEntidad] = useState();
+  const [filtroEntidad, setFiltroEntidad] = useState("");
 
   const [entidades, setEntidades] = useState([]);
 
-  const [asignacionGeneral, setAsignacionGeneral] = useState([]);
+  const [autorizos, setAutorizos] = useState([]);
 
-  const [asignacionDetallada, setAsignacionDetallada] = useState([]);
+  const [distribucion, setDistribucion] = useState([]);
 
-  const [distribucionEstadistica, setDistribucionEstadistica] = useState([]);
-
-  const [distribucionDetallada, setDistribucionDetallada] = useState([]);
+  const [redistribuciones, setRedistribuciones] = useState([]);
 
   useEffect(() => {
-    obtenerEntidades();
+    obtenerEntidadesSubordinadas(entidadDefault);
+    buscarAutorizosFecha(anno, mes, entidadDefault);
+    buscarDistribucionFecha(anno, mes, entidadDefault);
+    buscarRedistribucionesFecha(anno, mes, entidadDefault);
   }, []);
 
-  const obtenerEntidades = async () => {
+  const obtenerEntidadesSubordinadas = async (identidad) => {
     try {
-      const { data } = await axios.get("/api/entidad");
+      const { data } = await axios.post(`/api/entidad/subordinados/`, {
+        identidad,
+      });
       setEntidades(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const buscarxFiltroFecha = async (
-    anno = anno,
-    mes = mes,
-    identidad = session?.identidad
-  ) => {
-    try {
-      const { data } = await axios.post("/api/asignacion/xMesxEntidad", {
-        identidad,
-        anno,
-        mes,
-      });
-      setAsignacionGeneral(data);
-    } catch (error) {
-      toast.error("Ha ocurrido un error. Contacte al administrador");
-    }
-  };
-
-  const buscarxCombustible = async (
-    combustible,
+  const buscarAutorizosFecha = async (
+    anno,
+    mes,
     identidad = session?.identidad
   ) => {
     try {
       const { data } = await axios.post(
-        "/api/asignacion/xMesxEntidadNoAgrupado",
+        "/api/distribucion/buscarAutorizosMes",
         {
           identidad,
           anno,
           mes,
-          combustible,
         }
       );
-      setAsignacionDetallada(data);
+      setAutorizos(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const buscarDistribucionEstadistica = async (
-    anno = anno,
-    mes = mes,
-    identidad = session?.identidad,
-    combustible
+  const buscarRedistribucionesFecha = async (
+    anno,
+    mes,
+    identidad = session?.identidad
   ) => {
     try {
       const { data } = await axios.post(
-        "/api/asignacion/buscarAsignadoMesxCombustible",
+        "/api/distribucion/buscarDistribucionEstadisticaEntidadesSubordinadas",
         {
+          identidad,
           anno,
           mes,
-          identidad,
-          combustible,
         }
       );
-      setDistribucionEstadistica(data);
+      setRedistribuciones(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const buscarDistribucionDetallada = async (
-    anno = anno,
-    mes = mes,
-    identidad = session?.identidad,
-    combustible
+  const buscarDistribucionFecha = async (
+    anno,
+    mes,
+    identidad = session?.identidad
   ) => {
     try {
       const { data } = await axios.post(
-        "/api/asignacion/xMesxDistribucionxEntidadesSubordinadasxCombustible",
+        "/api/distribucion/buscarDistribucionEstadisticaaEntidad",
         {
+          identidad,
           anno,
           mes,
-          identidad,
-          combustible,
         }
       );
-      setDistribucionDetallada(data);
+      setDistribucion(data);
     } catch (error) {
       toast.error("Ha ocurrido un error. Contacte al administrador");
     }
   };
 
-  const columns = [
-    {
-      field: "nombre",
-      headerName: "Combustible",
-      width: 150,
-    },
-    {
-      field: "cantidad",
-      headerName: "Cantidad",
-    },
-    {
-      field: "fecha",
-      headerName: "Fecha",
-      renderCell: (params) => (
-        <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
-      ),
-    },
-  ];
-
-  const restante = (params) => {
-    return `${
-      Number.parseInt(params.row.cantidad) -
-      Number.parseInt(params.row.distribuido)
-    }`;
-  };
-
-  const columnsEstadistica = [
+  const columnsAutorizos = [
     {
       field: "nombre",
       headerName: "Combustible",
@@ -170,49 +132,78 @@ function VistaTablero() {
     {
       field: "cantidad",
       headerName: "Cantidad",
+    },
+  ];
+
+  const columnsDistribuido = [
+    {
+      field: "nombre",
+      headerName: "Combustible",
+      width: 160,
     },
     {
       field: "distribuido",
-      headerName: "Distribuido",
-    },
-    {
-      field: "restante",
-      headerName: "Restante",
-      valueGetter: restante,
+      headerName: "Cantidad",
     },
   ];
 
-  const columnsDetallado = [
+  const columnsRedistribuciones = [
     {
-      field: "fecha",
-      headerName: "Fecha",
-      renderCell: (params) => (
-        <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
-      ),
-    },
-    {
-      field: "combustible",
+      field: "nombre",
       headerName: "Combustible",
       width: 160,
     },
     {
-      field: "cantidad",
+      field: "midistribucion",
       headerName: "Cantidad",
-    },
-    {
-      field: "entidad",
-      headerName: "Entidad",
-      width: 250,
     },
   ];
 
+  const [state, setState] = useState({
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
   return (
     <>
-      <Card sx={{ p: "1rem", mb: ".5rem" }}>
-        <Grid container spacing={1}>
-          <Grid item xs={4}>
+      <div>
+        <Fab
+          color="warning"
+          variant="circular"
+          aria-label="icono_filtro"
+          onClick={toggleDrawer("right", true)}
+          sx={{ position: "fixed", top: 70, right: 16 }}
+        >
+          <FilterAltIcon />
+        </Fab>
+        <SwipeableDrawer
+          sx={{ pt: 10, px: 1 }}
+          anchor={"right"}
+          open={state["right"]}
+          onClose={toggleDrawer("right", false)}
+          onOpen={toggleDrawer("right", true)}
+        >
+          <Box
+            sx={{
+              width: 250,
+              pt: 10,
+              px: 1,
+            }}
+          >
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
               <DatePicker
+                defaultValue={dayjs(new Date())}
                 label={"Seleccionar mes"}
                 views={["year", "month"]}
                 openTo="year"
@@ -221,204 +212,201 @@ function VistaTablero() {
                 onChange={(newValue) => {
                   {
                     filtroEntidad
-                      ? buscarxFiltroFecha(
+                      ? buscarAutorizosFecha(
                           newValue.year(),
                           newValue.month() + 1,
                           filtroEntidad
                         )
-                      : buscarxFiltroFecha(
+                      : buscarAutorizosFecha(
+                          newValue.year(),
+                          newValue.month() + 1
+                        );
+                  }
+
+                  {
+                    filtroEntidad
+                      ? buscarRedistribucionesFecha(
+                          newValue.year(),
+                          newValue.month() + 1,
+                          filtroEntidad
+                        )
+                      : buscarRedistribucionesFecha(
+                          newValue.year(),
+                          newValue.month() + 1
+                        );
+                  }
+
+                  {
+                    filtroEntidad
+                      ? buscarDistribucionFecha(
+                          newValue.year(),
+                          newValue.month() + 1,
+                          filtroEntidad
+                        )
+                      : buscarDistribucionFecha(
                           newValue.year(),
                           newValue.month() + 1
                         );
                   }
                   setAnno(newValue.year());
                   setMes(newValue.month() + 1);
-                  setAsignacionDetallada([]);
                 }}
                 sx={{ display: "flex" }}
               />
             </LocalizationProvider>
-          </Grid>
 
-        </Grid>
-      </Card>
+            <TextField
+              select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select1"
+              name="entidad"
+              label="Entidades"
+              fullWidth
+              onChange={(e) => {
+                setFiltroEntidad(e.target.value);
+                buscarAutorizosFecha(anno, mes, e.target.value);
+                buscarDistribucionFecha(anno, mes, e.target.value);
+                buscarRedistribucionesFecha(anno, mes, e.target.value);
+              }}
+              sx={{ mt: ".5rem", mb: ".5rem" }}
+              value={filtroEntidad}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <CancelIcon
+                      onClick={() => {
+                        setFiltroEntidad("");
+                        buscarAutorizosFecha(anno, mes, entidadDefault);
+                        buscarDistribucionFecha(anno, mes, entidadDefault);
+                        buscarRedistribucionesFecha(anno, mes, entidadDefault);
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+            >
+              {entidades.map((ent, index) => (
+                <MenuItem key={index.toString()} value={ent.uid}>
+                  {ent.nombre}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        </SwipeableDrawer>
+      </div>
 
-      {asignacionGeneral.length === 0 ? (
-        <>
-          <Stack sx={{ width: "100%", mb: ".5rem" }} spacing={2}>
-            {!asignacionGeneral.length && !anno ? (
-              <>
-                <Alert severity="info">Seleccione la fecha</Alert>
-              </>
-            ) : (
-              <Alert severity="info">
-                No existe información para su entidad en la fecha seleccionada
-              </Alert>
-            )}
-          </Stack>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <Skeleton
-                animation="pulse"
-                variant="rounded"
-                width={150}
-                height={80}
+      <Grid container spacing={1}>
+        {!!autorizos.length && (
+          <>
+            <Grid item xs={6}>
+              <GraficoCombustiblesAutorizados autorizos={autorizos} />
+            </Grid>
+          </>
+        )}
+        {!!distribucion.length && (
+          <>
+            <Grid item xs={6}>
+              <GraficosCombustiblesDistribuidos distribucion={distribucion} />
+            </Grid>
+          </>
+        )}
+
+        {!!redistribuciones.length && (
+          <>
+            <Grid item xs={6}>
+              <GraficosCombustiblesRedistribuidos
+                redistribuciones={redistribuciones}
               />
             </Grid>
-            <Grid item xs>
-              <Skeleton
-                animation="pulse"
-                variant="rounded"
-                width={150}
-                height={80}
-              />
-            </Grid>
-            <Grid item xs>
-              <Skeleton
-                animation="pulse"
-                variant="rounded"
-                width={150}
-                height={80}
-              />
-            </Grid>
-          </Grid>
-        </>
-      ) : (
-        <Grid container spacing={2}>
-          {asignacionGeneral.map((asignacion, index) => (
-            <Grid item xs key={index.toString()}>
-              <Card
-                sx={{
-                  p: "1rem",
-                  minHeight: "7rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  mb: ".5rem",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  filtroEntidad
-                    ? (buscarxCombustible(
-                        asignacion.combustible,
-                        filtroEntidad
-                      ),
-                      buscarDistribucionEstadistica(
-                        anno,
-                        mes,
-                        filtroEntidad,
-                        asignacion.combustible
-                      ),
-                      buscarDistribucionDetallada(
-                        anno,
-                        mes,
-                        filtroEntidad,
-                        asignacion.combustible
-                      ))
-                    : (buscarxCombustible(asignacion.combustible),
-                      buscarDistribucionEstadistica(
-                        anno,
-                        mes,
-                        null,
-                        asignacion.combustible
-                      ),
-                      buscarDistribucionDetallada(
-                        anno,
-                        mes,
-                        null,
-                        asignacion.combustible
-                      ));
-                }}
-              >
-                <Typography variant="body1" color="primary" align="center">
-                  {asignacion.nombre}
-                </Typography>
-                <Typography variant="h6" color="initial" align="center">
-                  {asignacion.asignado}
-                </Typography>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+          </>
+        )}
+      </Grid>
 
-      {asignacionDetallada.length === 0 ? (
-        <>
-          <Grid container spacing={2} sx={{ mt: ".5rem" }}>
-            <Grid item xs>
-              <Skeleton animation="pulse" variant="rectangular" />
-            </Grid>
-          </Grid>
-        </>
-      ) : (
-        <>
-          <Grid container spacing={2}>
-            <Grid item xs>
-              <Card sx={{ p: "1rem" }}>
+      <Grid container spacing={1}>
+        {!!autorizos.length && (
+          <>
+            <Grid item xs={6}>
+              <Card sx={{ p: "1rem", mb: ".5rem" }}>
                 <Typography variant="h6" color="primary" align="center" mb={2}>
-                  ASIGNACIONES
+                  AUTORIZOS
                 </Typography>
                 <DataGrid
-                  rows={asignacionDetallada}
-                  columns={columns}
+                  localeText={
+                    esES.components.MuiDataGrid.defaultProps.localeText
+                  }
+                  rows={autorizos}
+                  columns={columnsAutorizos}
                   initialState={{
                     pagination: {
                       paginationModel: {
-                        pageSize: 10,
+                        pageSize: 25,
                       },
                     },
                   }}
-                  pageSizeOptions={[10]}
-                />
-              </Card>
-            </Grid>
-
-            <Grid item xs>
-              <Card sx={{ p: "1rem" }}>
-                <Typography variant="h6" color="primary" align="center" mb={2}>
-                  DISTRIBUCIONES
-                </Typography>
-                <DataGrid
-                  rows={distribucionEstadistica}
-                  columns={columnsEstadistica}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 10,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[10]}
+                  pageSizeOptions={[25]}
                   getRowId={(row) => row.nombre}
                 />
               </Card>
             </Grid>
-          </Grid>
+          </>
+        )}
 
-          {distribucionDetallada.length > 0 && (
-            <>
-              <Grid container spacing={2} sx={{ mt: ".5rem" }}>
-                <Grid item xs>
-                  <Card sx={{ p: "1rem" }}>
-                    <DataGrid
-                      rows={distribucionDetallada}
-                      columns={columnsDetallado}
-                      initialState={{
-                        pagination: {
-                          paginationModel: {
-                            pageSize: 10,
-                          },
-                        },
-                      }}
-                      pageSizeOptions={[10]}
-                    />
-                  </Card>
-                </Grid>
-              </Grid>
-            </>
-          )}
-        </>
-      )}
+        {!!distribucion.length && (
+          <>
+            <Grid item xs={6}>
+              <Card sx={{ p: "1rem", mb: ".5rem" }}>
+                <Typography variant="h6" color="primary" align="center" mb={2}>
+                  DISTRIBUIDO
+                </Typography>
+                <DataGrid
+                  localeText={
+                    esES.components.MuiDataGrid.defaultProps.localeText
+                  }
+                  rows={distribucion}
+                  columns={columnsDistribuido}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 25,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[25]}
+                  getRowId={(row) => row.nombre}
+                />
+              </Card>
+            </Grid>
+          </>
+        )}
+
+        {!!redistribuciones.length && (
+          <>
+            <Grid item xs={6}>
+              <Card sx={{ p: "1rem", mb: ".5rem" }}>
+                <Typography variant="h6" color="primary" align="center" mb={2}>
+                  REDISTRIBUIDO
+                </Typography>
+                <DataGrid
+                  localeText={
+                    esES.components.MuiDataGrid.defaultProps.localeText
+                  }
+                  rows={redistribuciones}
+                  columns={columnsRedistribuciones}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 25,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[25]}
+                  getRowId={(row) => row.nombre}
+                />
+              </Card>
+            </Grid>
+          </>
+        )}
+      </Grid>
     </>
   );
 }
