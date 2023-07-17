@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 13-07-2023 a las 15:36:43
+-- Tiempo de generación: 17-07-2023 a las 15:45:50
 -- Versión del servidor: 10.6.12-MariaDB-0ubuntu0.22.04.1
 -- Versión de PHP: 8.2.7
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `asignacion`
+-- Estructura de tabla para la tabla `autorizo`
 --
 
-CREATE TABLE `asignacion` (
+CREATE TABLE `autorizo` (
   `uid` varchar(100) NOT NULL,
   `combustible` varchar(100) NOT NULL,
   `cantidad` varchar(100) NOT NULL,
@@ -36,37 +36,13 @@ CREATE TABLE `asignacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `asignacion`
+-- Volcado de datos para la tabla `autorizo`
 --
 
-INSERT INTO `asignacion` (`uid`, `combustible`, `cantidad`, `entidad`, `fecha`) VALUES
-('02d34d92-cd77-4c59-ae3e-b4ba4162fb1d', '7209d09f-51bf-422e-8924-858031f3ea95', '50', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', '2023-07-03'),
-('03f4be85-36e3-46d1-828f-39b3b0d43a66', '7209d09f-51bf-422e-8924-858031f3ea95', '80', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-04'),
-('10aa7d95-073d-4baf-90dd-a46686259635', '7209d09f-51bf-422e-8924-858031f3ea95', '60', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', '2023-07-05'),
-('119b9230-9ccd-4a2e-a513-4f3d838c8126', '7209d09f-51bf-422e-8924-858031f3ea95', '60', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', '2023-07-01'),
-('1ed44fd3-06f0-48ef-af7e-27b704c9d9c8', '7209d09f-51bf-422e-8924-858031f3ea95', '300', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-10-01'),
-('225a5744-3d1d-490e-aaa1-21061b08cf90', '45fc902e-b554-4513-859e-90fdc4ebe573', '60', '24601383-9550-4da7-9aee-b88f50e4426e', '2023-10-01'),
-('23ffdb6f-fb3f-42e0-8c97-9d48103c54dc', '88cd55bd-6976-4d74-8374-c7106152e059', '10', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-08-01'),
-('2e774ef5-6527-4ace-8b90-bce52fc75582', '88cd55bd-6976-4d74-8374-c7106152e059', '5', '916b0c17-4837-420b-91ce-ad8bcad54289', '2023-08-01'),
-('33de678d-fb50-4c9b-b5b2-53ddb9d7008e', '88cd55bd-6976-4d74-8374-c7106152e059', '30', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', '2023-07-02'),
-('35c418cc-c041-436f-a27d-50cb46b45a3a', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '17', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-06'),
-('3e6cf574-9f6d-4926-ab84-594d721abeb9', '7209d09f-51bf-422e-8924-858031f3ea95', '40', '8258a2a0-e737-48c9-a604-7475f76fbc0f', '2023-07-01'),
-('3f4e298a-5768-41f0-bc92-6c652fb26484', '45fc902e-b554-4513-859e-90fdc4ebe573', '310', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-10-01'),
-('424aeff5-4aa5-4617-bb37-d8051010722f', '88cd55bd-6976-4d74-8374-c7106152e059', '150', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-02'),
-('457dae86-b73a-41fa-827f-49082d375f42', '88cd55bd-6976-4d74-8374-c7106152e059', '59', '916b0c17-4837-420b-91ce-ad8bcad54289', '2023-10-01'),
-('57f5d19e-c4cc-4cb4-84f2-5f71ef168ee0', '7209d09f-51bf-422e-8924-858031f3ea95', '180', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-09-01'),
-('6f191718-7b62-4844-9d84-be2aee4fa6d5', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '330', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-10-01'),
-('72710d9d-7de9-4262-815b-ef2f1097bbf2', '7209d09f-51bf-422e-8924-858031f3ea95', '300', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-01'),
-('72c568b6-c039-45c7-b20b-857cd3ac3503', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '20', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', '2023-07-04'),
-('7f58ff6c-e538-4ee4-8e9d-bff7c586fe55', '7209d09f-51bf-422e-8924-858031f3ea95', '60', '24601383-9550-4da7-9aee-b88f50e4426e', '2023-10-01'),
-('9484bd27-f33a-49a0-9701-91e86c692206', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '30', '762abd45-f7df-4f26-8b27-aa63728ffe87', '2023-10-01'),
-('a3726848-b685-4f24-b448-8997a58ea415', '88cd55bd-6976-4d74-8374-c7106152e059', '10', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-05'),
-('b34f7412-cd61-41a5-a3c8-55d4e6a156eb', '45fc902e-b554-4513-859e-90fdc4ebe573', '30', '2a5f30af-5c8f-4f3a-ad23-fc01b3de3716', '2023-09-01'),
-('cbe3e577-bea3-4ea8-9b91-419dca8e3aa1', '45fc902e-b554-4513-859e-90fdc4ebe573', '125', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-09-01'),
-('d358c6f5-cba6-41db-8f12-190aac54a8e6', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '25', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-03'),
-('da6b1f42-59c5-44a1-9406-72af46d4b3d6', '7209d09f-51bf-422e-8924-858031f3ea95', '60', '2a5f30af-5c8f-4f3a-ad23-fc01b3de3716', '2023-09-01'),
-('df0503a2-15f6-42de-95fc-cc073082a27a', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '10', '762abd45-f7df-4f26-8b27-aa63728ffe87', '2023-07-02'),
-('e602d28e-a726-41f8-a0b3-5bcfe5db05d7', '88cd55bd-6976-4d74-8374-c7106152e059', '320', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-10-01');
+INSERT INTO `autorizo` (`uid`, `combustible`, `cantidad`, `entidad`, `fecha`) VALUES
+('444e8bb8-2b21-43db-a623-0a7b7bb47aa2', '7209d09f-51bf-422e-8924-858031f3ea95', '500', 'd40e9d34-c5a3-463b-a746-9e972c67e323', '2023-08-01'),
+('5ba0f874-36b2-4ef6-98d1-a2bbec3b4a7a', '7209d09f-51bf-422e-8924-858031f3ea95', '500', 'd40e9d34-c5a3-463b-a746-9e972c67e323', '2023-07-01'),
+('a79ede2d-5c30-4fb2-b221-895ffe016e3c', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '500', 'd40e9d34-c5a3-463b-a746-9e972c67e323', '2023-07-16');
 
 -- --------------------------------------------------------
 
@@ -107,34 +83,39 @@ CREATE TABLE `despacho` (
 --
 
 INSERT INTO `despacho` (`uid`, `cantidad`, `fecha`, `combustible`) VALUES
-('028cd167-51c4-46ce-b6fe-1dd427312761', 1000, '2023-07-01', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('0549e2ec-d77d-4865-872d-c35863d8a9fe', 500, '2023-08-01', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('171d1320-d854-491d-bf32-c96a12c07eee', 1000, '2023-07-02', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('2a8fdc13-1807-4536-97f6-7874766a6d42', 1000, '2023-07-04', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('2b771bcb-2f0d-45b0-bfb8-7270be11819f', 1000, '2023-07-07', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('3065bac4-7e96-48f7-bd42-e23d2105360a', 1000, '2023-07-03', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('4316bf81-743b-4672-bda8-6fe91580dd9b', 600, '2023-10-01', '45fc902e-b554-4513-859e-90fdc4ebe573'),
-('43f3417a-2aea-4c23-b8c5-e49a531da52f', 1000, '2023-07-01', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('4c630e17-4b38-49cd-921e-2209e28afbd5', 600, '2023-10-01', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('522b2398-a480-4b34-9c6c-75e41f424bc3', 1000, '2023-07-07', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('5288006d-36fa-4efa-b08f-16520db03456', 1000, '2023-07-07', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('60fcdd21-cac6-4266-a461-2b5742aed8b2', 1000, '2023-07-04', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('72b487db-4570-4ad0-8613-5042157b9221', 1000, '2023-07-03', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('7ce1dab9-1168-4daf-bcf6-798591eabcac', 600, '2023-10-01', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('8a2ef0be-25c6-4ad6-bd82-f6ba219eefb1', 1000, '2023-09-01', '45fc902e-b554-4513-859e-90fdc4ebe573'),
-('8fe187aa-024b-49a5-89eb-124e28356690', 1000, '2023-07-06', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('ac144de7-f705-4418-ac3a-2d75b4613ce9', 1000, '2023-07-05', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('af71c31d-cd40-4a41-b686-8b3ad22f01f8', 1000, '2023-07-06', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('b8dad18d-2bf7-4a61-864f-8f083389b4d5', 1000, '2023-07-06', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('c7a788f6-19fd-46ad-8a5b-5accbc10f095', 600, '2023-10-01', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('ce7b9393-dd75-4b66-92da-81dfd25f6c21', 1000, '2023-07-05', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('d3e980ff-6001-4825-9473-e76ce2a30d83', 1000, '2023-07-02', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('d64e8918-d7cc-46d7-9081-3d13fe6e9adb', 1000, '2023-07-02', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('da507f5c-286f-458c-b792-f8905f5283a3', 1000, '2023-07-04', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('e23d5b92-5669-4d14-99a0-367acda37f65', 1000, '2023-09-01', '7209d09f-51bf-422e-8924-858031f3ea95'),
-('e3a941a5-d44f-4057-ba24-263687482a8b', 1000, '2023-07-01', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
-('e977c1fe-b5c4-4f6e-99c2-3158db98d8b7', 1000, '2023-07-03', '88cd55bd-6976-4d74-8374-c7106152e059'),
-('f4ba3db0-17f5-40fa-bc60-cadfd4cfabf9', 1000, '2023-07-05', '7209d09f-51bf-422e-8924-858031f3ea95');
+('bf2705b4-d72a-4bb1-8856-0d3c405e77a4', 1000, '2023-07-16', '23e032c1-0dad-4eb2-b32c-76668c74a7ea'),
+('c42836e5-6def-453a-8c0c-eb46694c6d59', 1000, '2023-07-01', '7209d09f-51bf-422e-8924-858031f3ea95'),
+('d6d26f75-2166-48e6-91d4-b89a937278be', 1000, '2023-08-01', '7209d09f-51bf-422e-8924-858031f3ea95');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `distribucion`
+--
+
+CREATE TABLE `distribucion` (
+  `uid` varchar(100) NOT NULL,
+  `combustible` varchar(100) NOT NULL,
+  `cantidad` varchar(100) NOT NULL,
+  `entidad` varchar(100) NOT NULL,
+  `fecha` date NOT NULL,
+  `prioridad` varchar(100) DEFAULT NULL,
+  `observaciones` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `distribucion`
+--
+
+INSERT INTO `distribucion` (`uid`, `combustible`, `cantidad`, `entidad`, `fecha`, `prioridad`, `observaciones`) VALUES
+('338a22c6-5636-4abd-880d-b29edf8a2fd9', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '100', 'b536ef18-7dea-418d-8185-8bdb4a79912c', '2023-07-16', 'Naranja', 'Observaciones'),
+('55423cd7-0a01-4670-b492-c7aa1280f283', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '100', 'fd05f8b0-e6f6-4451-bda7-144f785fb436', '2023-07-16', 'soya', 'Observaciones'),
+('66b64d67-66b8-4231-a849-2440c4860222', '7209d09f-51bf-422e-8924-858031f3ea95', '100', 'b536ef18-7dea-418d-8185-8bdb4a79912c', '2023-07-01', 'Naranja', 'Observaciones'),
+('84527a3b-e8cc-4892-a09b-7772d77c6ed4', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '25', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-16', 'Papa', 'Papa'),
+('931f26dc-5a64-4011-9c9b-ab238958be3a', '7209d09f-51bf-422e-8924-858031f3ea95', '50', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-16', 'Naranja', 'Observaciones'),
+('a59a0c9d-08d8-444b-bf6f-e38d4a95116d', '7209d09f-51bf-422e-8924-858031f3ea95', '15', '8258a2a0-e737-48c9-a604-7475f76fbc0f', '2023-07-01', 'Naranja', 'oiuytgfvbn'),
+('bcfb8df0-9e7f-4b9e-bf12-fe3954424b92', '23e032c1-0dad-4eb2-b32c-76668c74a7ea', '5', '24601383-9550-4da7-9aee-b88f50e4426e', '2023-07-16', 'Naranja', 'Observaciones'),
+('cc98e0bd-3e1e-460b-a671-d323dc099a9a', '7209d09f-51bf-422e-8924-858031f3ea95', '5', 'dc38fedc-1a4b-43ee-8e60-172d9a31a078', '2023-07-01', 'Naranja', 'mnbvcx');
 
 -- --------------------------------------------------------
 
@@ -224,7 +205,9 @@ INSERT INTO `usuario` (`uid`, `nombre`, `usuario`, `correo`, `contrasena`, `enti
 ('3cbd5372-8e8d-47b8-98ce-23aefb888e3e', 'Empresa Agropecuaria Ruta Invasora', '53971221', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '291b233d-3b0a-464d-a222-f0326a78f5e5', 'administrador', 1),
 ('4f874d3e-8450-40f7-a2e0-63122bf42f1e', 'Empresa Porcino Ciego de Ávila', '53502915', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '3a673f26-65d6-4bd9-acc5-5868fc1dbe21', 'administrador', 1),
 ('67931c82-e852-4148-9c4a-356fda6b4bf8', 'Empresa Pecuaria Genética Turiguanó', '53820892', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '0700c924-b2c9-4655-aa96-a333ee4e9cae', 'administrador', 1),
+('84754d06-0dbf-4568-a130-4172af2ce6e4', 'Empresa Agroindustrial Ceballos', '53890192', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', 'b536ef18-7dea-418d-8185-8bdb4a79912c', 'administrador', 1),
 ('a914e920-9e29-4d4d-9c1b-3e3248a1d6ee', 'EGAME (Empresa de Ganado Menor)', '53425171', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '40e6aeec-6f8b-48d9-9a1c-a77ced2f0102', 'administrador', 1),
+('bc1ccb93-264a-4ae9-8344-ab17134fc4cf', 'Grupo Empresarial Agrícola', '53348230', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', 'd40e9d34-c5a3-463b-a746-9e972c67e323', 'administrador', 1),
 ('bd05e7e1-aece-4fc8-b39a-12f31850cbbe', 'Empresa Genética Porcino', '53724787', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '20e0c87d-17d8-40bd-9962-e8f161822b5c', 'administrador', 1),
 ('e194bc49-79f9-46eb-bbd8-1b59a9796e0b', 'Lazaro', '59958885', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '3c952477-2361-4b61-8bcd-3ee04f846437', 'superadmin', 1),
 ('f80f82fb-b2cc-44fb-a2c1-2faa61c6ad4d', 'Grupo Empresarial Ganadero', '53919352', 'lrodriguezplaceres@gmail.com', '$2a$10$CwTysUXWue0Thq9StjUK0uQS8W.OIzRcdSKO4Q6rHnZoBkryJaMS.', '1b9c42a4-1320-4118-a174-30701c3939b1', 'administrador', 1);
@@ -234,12 +217,12 @@ INSERT INTO `usuario` (`uid`, `nombre`, `usuario`, `correo`, `contrasena`, `enti
 --
 
 --
--- Indices de la tabla `asignacion`
+-- Indices de la tabla `autorizo`
 --
-ALTER TABLE `asignacion`
+ALTER TABLE `autorizo`
   ADD PRIMARY KEY (`uid`),
-  ADD KEY `entidad_id` (`entidad`),
-  ADD KEY `combustible_ed` (`combustible`);
+  ADD KEY `combustible_i1` (`combustible`),
+  ADD KEY `entidad_e1` (`entidad`);
 
 --
 -- Indices de la tabla `combustible`
@@ -253,6 +236,14 @@ ALTER TABLE `combustible`
 ALTER TABLE `despacho`
   ADD PRIMARY KEY (`uid`),
   ADD KEY `combustible_id` (`combustible`);
+
+--
+-- Indices de la tabla `distribucion`
+--
+ALTER TABLE `distribucion`
+  ADD PRIMARY KEY (`uid`),
+  ADD KEY `entidad_id` (`entidad`),
+  ADD KEY `combustible_ed` (`combustible`);
 
 --
 -- Indices de la tabla `entidad`
@@ -273,17 +264,24 @@ ALTER TABLE `usuario`
 --
 
 --
--- Filtros para la tabla `asignacion`
+-- Filtros para la tabla `autorizo`
 --
-ALTER TABLE `asignacion`
-  ADD CONSTRAINT `combustible_ed` FOREIGN KEY (`combustible`) REFERENCES `combustible` (`uid`),
-  ADD CONSTRAINT `entidad_id` FOREIGN KEY (`entidad`) REFERENCES `entidad` (`uid`);
+ALTER TABLE `autorizo`
+  ADD CONSTRAINT `combustible_i1` FOREIGN KEY (`combustible`) REFERENCES `combustible` (`uid`),
+  ADD CONSTRAINT `entidad_e1` FOREIGN KEY (`entidad`) REFERENCES `entidad` (`uid`);
 
 --
 -- Filtros para la tabla `despacho`
 --
 ALTER TABLE `despacho`
   ADD CONSTRAINT `combustible_id` FOREIGN KEY (`combustible`) REFERENCES `combustible` (`uid`);
+
+--
+-- Filtros para la tabla `distribucion`
+--
+ALTER TABLE `distribucion`
+  ADD CONSTRAINT `combustible_ed` FOREIGN KEY (`combustible`) REFERENCES `combustible` (`uid`),
+  ADD CONSTRAINT `entidad_id` FOREIGN KEY (`entidad`) REFERENCES `entidad` (`uid`);
 
 --
 -- Filtros para la tabla `usuario`

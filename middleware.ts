@@ -10,5 +10,5 @@ export { default } from "next-auth/middleware"
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/', '/asignacion/:path*', '/combustible/:path*', '/despacho/:path*', '/entidad/:path*', '/usuario/:path*', '/distribucion/:path*'],
+  matcher: ['/', '/autorizo/:path*', '/combustible/:path*', '/despacho/:path*', '/entidad/:path*', '/usuario/:path*', '/distribucion/:path*'],
 };
