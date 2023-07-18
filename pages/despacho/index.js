@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import {
   Alert,
   Card,
@@ -18,6 +17,7 @@ import { DataGrid, esES } from "@mui/x-data-grid";
 import moment from "moment";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function index({ despachos }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ function index({ despachos }) {
     {
       field: "fecha",
       headerName: "Fecha",
-      width: 150,
+      width: 140,
       renderCell: (params) => (
         <Link href={`/despacho/${params.row.id}`} className="decoration-none">
           {moment(params.row.fecha).utc().format("YYYY-MM-DD")}
@@ -36,12 +36,12 @@ function index({ despachos }) {
     {
       field: "combustible",
       headerName: "Combustible",
-      width: 250,
+      width: 220,
     },
     {
       field: "cantidad",
       headerName: "Cantidad",
-      width: 100,
+      width: 150,
     },
   ];
 
@@ -50,7 +50,7 @@ function index({ despachos }) {
       <Head>
         <title>Despachos</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         {despachos.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info" variant="filled">No hay despachos disponibles</Alert>
@@ -80,8 +80,9 @@ function index({ despachos }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -89,7 +90,7 @@ function index({ despachos }) {
             onClick={() => router.push("/despacho/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

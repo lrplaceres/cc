@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import {
   Alert,
   Card,
@@ -17,6 +16,7 @@ import axios from "axios";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function index({ usuarios }) {
   const router = useRouter();
@@ -58,7 +58,7 @@ function index({ usuarios }) {
       <Head>
         <title>Usuarios</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         {usuarios.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info" variant="filled">No hay usuarios disponibles</Alert>
@@ -88,8 +88,9 @@ function index({ usuarios }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -97,7 +98,7 @@ function index({ usuarios }) {
             onClick={() => router.push("/usuario/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

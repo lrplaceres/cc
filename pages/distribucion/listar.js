@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { useSession } from "next-auth/react";
@@ -20,6 +19,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -31,8 +31,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Head from "next/head";
+import Layout from "@/components/Layout";
 
-function listar({entidadDefault}) {
+function listar({ entidadDefault }) {
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -57,7 +58,11 @@ function listar({entidadDefault}) {
     buscarDistribucionMes(anno, mes, entidadDefault);
   }, []);
 
-  const buscarDistribucionMes = async (anno, mes,identidad = session?.identidad) => {
+  const buscarDistribucionMes = async (
+    anno,
+    mes,
+    identidad = session?.identidad
+  ) => {
     try {
       const { data } = await axios.post(
         "/api/distribucion/buscarDistribucionEntidadesSubordinadas",
@@ -77,6 +82,7 @@ function listar({entidadDefault}) {
     {
       field: "fecha",
       headerName: "Fecha",
+      width: 160,
       renderCell: (params) => (
         <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
       ),
@@ -129,8 +135,8 @@ function listar({entidadDefault}) {
       <Head>
         <title>Distribución listado</title>
       </Head>
-      <MiniDrawer>
-        <Container maxWidth="sm">
+      <Layout>
+        <Container maxWidth="xs">
           <Card
             sx={{
               p: "1rem",
@@ -157,34 +163,47 @@ function listar({entidadDefault}) {
 
         {distribucion.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info" variant="filled">No hay distribuciones disponibles</Alert>
+            <Alert severity="info" variant="filled">
+              No hay distribuciones disponibles
+            </Alert>
           </Stack>
         ) : (
-          <Container maxWidth="md">
-            <Card sx={{ p: "1rem" }}>
-              <Typography variant="h6" color="primary" align="center" mb={2}>
-                REDISTRIBUCIONES
-              </Typography>
-              <DataGrid
-                rows={distribucion}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 25,
-                    },
-                  },
-                }}
-                pageSizeOptions={[25]}
-              />
-            </Card>
-          </Container>
+          <>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Card sx={{ p: "1rem" }}>
+                  <Typography
+                    variant="h6"
+                    color="primary"
+                    align="center"
+                    mb={2}
+                  >
+                    REDISTRIBUCIONES
+                  </Typography>
+                  <DataGrid
+                    rows={distribucion}
+                    columns={columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 25,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[25]}
+                  />
+                </Card>
+              </Grid>
+            </Grid>
+            <Container maxWidth="md"></Container>
+          </>
         )}
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -192,7 +211,7 @@ function listar({entidadDefault}) {
             onClick={() => router.push("/distribucion/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
 
       <Dialog
         open={open}

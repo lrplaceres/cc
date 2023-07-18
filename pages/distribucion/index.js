@@ -1,5 +1,4 @@
-import MiniDrawer from "@/components/drawer";
-import dayjs, { isDayjs } from "dayjs";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/es";
@@ -24,6 +23,7 @@ import { getServerSession } from "next-auth/next";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { DatePicker } from "@mui/x-date-pickers";
 import Head from "next/head";
+import Layout from "@/components/Layout";
 
 function index({ entidadDefault }) {
   const router = useRouter();
@@ -57,19 +57,22 @@ function index({ entidadDefault }) {
     {
       field: "nombre",
       headerName: "Combustible",
-      width: 160,
+      width: 150,
     },
     {
       field: "cantidad",
       headerName: "Cantidad",
+      width: 140,
     },
     {
       field: "distribuido",
       headerName: "Redistribuido",
+      width: 160,
     },
     {
       field: "restante",
       headerName: "Restante",
+      width: 130,
       valueGetter: restante,
     },
   ];
@@ -78,11 +81,12 @@ function index({ entidadDefault }) {
     {
       field: "nombre",
       headerName: "Combustible",
-      width: 160,
+      width: 150,
     },
     {
       field: "midistribucion",
       headerName: "Redistribuido",
+      width: 160,
     },
   ];
 
@@ -90,11 +94,12 @@ function index({ entidadDefault }) {
     {
       field: "nombre",
       headerName: "Combustible",
-      width: 160,
+      width: 150,
     },
     {
       field: "distribuido",
       headerName: "Distribuido",
+      width: 140,
     },
   ];
 
@@ -163,7 +168,7 @@ function index({ entidadDefault }) {
       <Head>
         <title>Distribución estadístico</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         <Container maxWidth="sm">
           <Card
             sx={{
@@ -224,7 +229,7 @@ function index({ entidadDefault }) {
           </Stack>
         ) : (
           <Container maxWidth="sm">
-            <Card sx={{ p: "1rem" }}>
+            <Card sx={{ p: "1rem", mb: ".5rem" }}>
               <Typography variant="h6" color="primary" align="center" mb={2}>
                 DISTRIBUCIÓN
               </Typography>
@@ -276,8 +281,9 @@ function index({ entidadDefault }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -285,7 +291,7 @@ function index({ entidadDefault }) {
             onClick={() => router.push("/distribucion/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

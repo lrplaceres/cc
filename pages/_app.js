@@ -20,7 +20,6 @@ export default function App({
   useEffect(() => {
     const handleRouterChange = (url) => {
       NProgress.start();
-      NProgress.configure({ parent: "#container" });
     };
     router.events.on("routeChangeStart", handleRouterChange);
     router.events.on("routeChangeComplete", () => NProgress.done());

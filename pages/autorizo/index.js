@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import {
   Alert,
   Button,
@@ -26,6 +25,7 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import Layout from "@/components/Layout";
 
 function index({ autorizos }) {
   const router = useRouter();
@@ -64,6 +64,7 @@ function index({ autorizos }) {
     {
       field: "cantidad",
       headerName: "Cantidad",
+      width: 100,
     },
     {
       field: "entidad",
@@ -73,6 +74,7 @@ function index({ autorizos }) {
     {
       field: "fecha",
       headerName: "Fecha",
+      width: 140,
       renderCell: (params) => (
         <>{moment(params.row.fecha).utc().format("YYYY-MM-DD")}</>
       ),
@@ -100,7 +102,7 @@ function index({ autorizos }) {
       <Head>
         <title>Autorizos</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         {autorizosFiltrados.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info" variant="filled">No hay autorizos disponibles</Alert>
@@ -130,8 +132,9 @@ function index({ autorizos }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -139,7 +142,7 @@ function index({ autorizos }) {
             onClick={() => router.push("/autorizo/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
 
       <Dialog
         open={open}

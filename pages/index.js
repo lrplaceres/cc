@@ -1,8 +1,8 @@
-import MiniDrawer from "@/components/drawer";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import VistaTablero from "@/components/VistaTablero";
+import Layout from "@/components/Layout";
 
 function index({ entidadDefault }) {
   return (
@@ -10,9 +10,9 @@ function index({ entidadDefault }) {
       <Head>
         <title>Tablero</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         <VistaTablero entidadDefault={entidadDefault} />
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

@@ -1,9 +1,9 @@
-import MiniDrawer from "@/components/drawer";
 import { Card, Container, Typography, TextField } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function perfil() {
   const { data: session, status } = useSession();
@@ -13,10 +13,10 @@ function perfil() {
     <Head>
       <title>Perfil</title>
     </Head>
-    <MiniDrawer>
+    <Layout>
       <Container maxWidth="sm">
         <Card sx={{ p: "1rem" }}>
-          <Typography variant="h6" color="primary" mb={2}>PERFIL</Typography>
+          <Typography variant="h6" color="primary" align="center" mb={2}>PERFIL</Typography>
           <TextField
             label="Usuario"
             value={session?.usuario}
@@ -47,7 +47,7 @@ function perfil() {
           />
         </Card>
       </Container>
-    </MiniDrawer>
+    </Layout>
     </>
   );
 }

@@ -132,6 +132,7 @@ function VistaTablero({ entidadDefault }) {
     {
       field: "cantidad",
       headerName: "Cantidad",
+      width: 140,
     },
   ];
 
@@ -144,6 +145,7 @@ function VistaTablero({ entidadDefault }) {
     {
       field: "distribuido",
       headerName: "Cantidad",
+      width: 140,
     },
   ];
 
@@ -156,6 +158,7 @@ function VistaTablero({ entidadDefault }) {
     {
       field: "midistribucion",
       headerName: "Cantidad",
+      width: 140,
     },
   ];
 
@@ -197,7 +200,7 @@ function VistaTablero({ entidadDefault }) {
           <Box
             sx={{
               width: 250,
-              pt: 10,
+              pt: 1,
               px: 1,
             }}
           >
@@ -298,14 +301,14 @@ function VistaTablero({ entidadDefault }) {
       <Grid container spacing={1}>
         {!!autorizos.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <GraficoCombustiblesAutorizados autorizos={autorizos} />
             </Grid>
           </>
         )}
         {!!distribucion.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <GraficosCombustiblesDistribuidos distribucion={distribucion} />
             </Grid>
           </>
@@ -313,7 +316,7 @@ function VistaTablero({ entidadDefault }) {
 
         {!!redistribuciones.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <GraficosCombustiblesRedistribuidos
                 redistribuciones={redistribuciones}
               />
@@ -325,7 +328,7 @@ function VistaTablero({ entidadDefault }) {
       <Grid container spacing={1}>
         {!!autorizos.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ p: "1rem", mb: ".5rem" }}>
                 <Typography variant="h6" color="primary" align="center" mb={2}>
                   AUTORIZOS
@@ -353,7 +356,7 @@ function VistaTablero({ entidadDefault }) {
 
         {!!distribucion.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ p: "1rem", mb: ".5rem" }}>
                 <Typography variant="h6" color="primary" align="center" mb={2}>
                   DISTRIBUIDO
@@ -381,7 +384,7 @@ function VistaTablero({ entidadDefault }) {
 
         {!!redistribuciones.length && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ p: "1rem", mb: ".5rem" }}>
                 <Typography variant="h6" color="primary" align="center" mb={2}>
                   REDISTRIBUIDO

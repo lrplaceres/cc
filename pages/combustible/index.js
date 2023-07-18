@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import {
   Alert,
   Card,
@@ -17,6 +16,7 @@ import { DataGrid, esES } from "@mui/x-data-grid";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function index({ combustibles }) {
   const router = useRouter();
@@ -42,7 +42,7 @@ function index({ combustibles }) {
       <Head>
         <title>Combustibles</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         {combustibles.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info" variant="filled">No hay combustibles disponibles</Alert>
@@ -72,8 +72,9 @@ function index({ combustibles }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -81,7 +82,7 @@ function index({ combustibles }) {
             onClick={() => router.push("/combustible/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

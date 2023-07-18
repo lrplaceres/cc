@@ -1,14 +1,14 @@
 import FormEditarUsuario from "@/components/FormEditarUsuario";
-import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function editar() {
   return (
     <>
-      <MiniDrawer>
+      <Layout>
         <FormEditarUsuario />
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

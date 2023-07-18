@@ -16,7 +16,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { ToastContainer } from "react-toastify";
-import { Container } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import Head from "next/head";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import { useRouter } from "next/router";
@@ -456,8 +456,9 @@ export default function MiniDrawer({ children }) {
                       <LocalGasStationIcon
                         color={
                           (router.pathname.split("/")[1] == "distribucion" &&
-                          !router.pathname.split("/")[2]) || (router.pathname.split("/")[1] == "distribucion" &&
-                          router.pathname.split("/")[2] == "nuevo")
+                            !router.pathname.split("/")[2]) ||
+                          (router.pathname.split("/")[1] == "distribucion" &&
+                            router.pathname.split("/")[2] == "nuevo")
                             ? "primary"
                             : ""
                         }
@@ -509,9 +510,10 @@ export default function MiniDrawer({ children }) {
             )}
           </List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, mt: "4rem" }} id="container">
-          <Container maxWidth="xl">{children}</Container>
-        </Box>
+
+        <Container sx={{ mt: "4rem"}} id="container">
+          {children}
+        </Container>
       </Box>
       <ToastContainer />
     </>

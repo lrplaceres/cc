@@ -1,14 +1,14 @@
 import FormNuevoCombustible from "@/components/FormNuevoCombustible";
-import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function editar() {
   return (
     <>
-      <MiniDrawer>
+      <Layout>
         <FormNuevoCombustible />
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

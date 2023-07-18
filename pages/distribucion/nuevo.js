@@ -1,14 +1,14 @@
 import FormNuevoDistribucion from "@/components/FormNuevoDistribucion";
-import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function nuevo({entidadDefault}) {
   return (
     <>
-      <MiniDrawer>
+      <Layout>
         <FormNuevoDistribucion entidadDefault={entidadDefault}/>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

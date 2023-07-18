@@ -1,14 +1,14 @@
-import MiniDrawer from "@/components/drawer";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import FormNuevoAutorizo from "@/components/FormNuevoAutorizo";
+import Layout from "@/components/Layout";
 
 function nuevo() {
   return (
     <>
-      <MiniDrawer>
+      <Layout>
         <FormNuevoAutorizo />
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }

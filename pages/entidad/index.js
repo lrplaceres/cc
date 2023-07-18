@@ -1,4 +1,3 @@
-import MiniDrawer from "@/components/drawer";
 import {
   Alert,
   Card,
@@ -18,6 +17,7 @@ import Link from "next/link";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Layout from "@/components/Layout";
 
 function index({ entidades }) {
   const router = useRouter();
@@ -60,7 +60,7 @@ function index({ entidades }) {
       <Head>
         <title>Entidades</title>
       </Head>
-      <MiniDrawer>
+      <Layout>
         {entidades.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info" variant="filled">No hay entidades disponibles</Alert>
@@ -90,8 +90,9 @@ function index({ entidades }) {
 
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
           icon={<SpeedDialIcon />}
+          direction="down"
         >
           <SpeedDialAction
             icon={<AddBoxIcon />}
@@ -99,7 +100,7 @@ function index({ entidades }) {
             onClick={() => router.push("/entidad/nuevo")}
           />
         </SpeedDial>
-      </MiniDrawer>
+      </Layout>
     </>
   );
 }
