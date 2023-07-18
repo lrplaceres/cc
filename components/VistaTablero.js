@@ -6,11 +6,8 @@ import {
   Box,
   Card,
   Fab,
-  FormControl,
   InputAdornment,
-  InputLabel,
   MenuItem,
-  Select,
   SwipeableDrawer,
   Typography,
   TextField,
@@ -23,8 +20,8 @@ import Grid from "@mui/material/Grid";
 import { useSession } from "next-auth/react";
 import { DataGrid, esES } from "@mui/x-data-grid";
 import GraficoCombustiblesAutorizados from "./GraficoCombustiblesAutorizados";
-import GraficosCombustiblesRedistribuidos from "./GraficosCombustiblesRedistribuidos";
-import GraficosCombustiblesDistribuidos from "./GraficosCombustiblesDistribuidos";
+import GraficoCombustiblesRedistribuidos from "./GraficoCombustiblesRedistribuidos";
+import GraficoCombustiblesDistribuidos from "./GraficoCombustiblesDistribuidos";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CancelIcon from "@mui/icons-material/Cancel";
 
@@ -186,7 +183,7 @@ function VistaTablero({ entidadDefault }) {
           variant="circular"
           aria-label="icono_filtro"
           onClick={toggleDrawer("right", true)}
-          sx={{ position: "fixed", top: 70, right: 16 }}
+          sx={{ position: "fixed", top: 80, right: 16 }}
         >
           <FilterAltIcon />
         </Fab>
@@ -309,7 +306,7 @@ function VistaTablero({ entidadDefault }) {
         {!!distribucion.length && (
           <>
             <Grid item xs={12} md={6}>
-              <GraficosCombustiblesDistribuidos distribucion={distribucion} />
+              <GraficoCombustiblesDistribuidos distribucion={distribucion} />
             </Grid>
           </>
         )}
@@ -317,7 +314,7 @@ function VistaTablero({ entidadDefault }) {
         {!!redistribuciones.length && (
           <>
             <Grid item xs={12} md={6}>
-              <GraficosCombustiblesRedistribuidos
+              <GraficoCombustiblesRedistribuidos
                 redistribuciones={redistribuciones}
               />
             </Grid>

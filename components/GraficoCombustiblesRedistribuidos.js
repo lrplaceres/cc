@@ -1,7 +1,7 @@
 import ReactEcharts from "echarts-for-react";
 import Typography from "@mui/material/Typography";
 
-function GraficosCombustiblesRedistribuidos({ redistribuciones }) {
+function GraficoCombustiblesRedistribuidos({ redistribuciones }) {
   const valores = [];
   redistribuciones.map((r) => {
     valores.push({ name: r.nombre, value: r.midistribucion });
@@ -52,4 +52,4 @@ function GraficosCombustiblesRedistribuidos({ redistribuciones }) {
   );
 }
 
-export default GraficosCombustiblesRedistribuidos;
+export default GraficoCombustiblesRedistribuidos;

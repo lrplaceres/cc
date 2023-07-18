@@ -92,7 +92,7 @@ export default function MenuAppBar() {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+            sx={{ flexGrow: 1, display: "flex", alignItems: "center", justifyContent:"center"}}
           >
             <Image
               src={`/Horus.png`}

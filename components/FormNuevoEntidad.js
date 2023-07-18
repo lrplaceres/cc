@@ -174,7 +174,7 @@ function FormNuevoEntidad() {
               variant="contained"
               color="success"
               type="submit"
-              //disabled={!despacho.cantidad || !despacho.combustible || !fecha}
+              disabled={!entidad.nombre}
               startIcon={<DoneIcon />}
             >
               Aceptar
