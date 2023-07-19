@@ -26,7 +26,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  esES,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -105,6 +110,7 @@ function listar({ entidadDefault }) {
       field: "actions",
       type: "actions",
       headerName: "Acciones",
+      disableExport: true,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<DeleteIcon color="error" />}
@@ -181,6 +187,9 @@ function listar({ entidadDefault }) {
                     REDISTRIBUCIONES
                   </Typography>
                   <DataGrid
+                    localeText={
+                      esES.components.MuiDataGrid.defaultProps.localeText
+                    }
                     rows={distribucion}
                     columns={columns}
                     initialState={{
@@ -191,11 +200,11 @@ function listar({ entidadDefault }) {
                       },
                     }}
                     pageSizeOptions={[25]}
+                    slots={{ toolbar: GridToolbar }}
                   />
                 </Card>
               </Grid>
             </Grid>
-            <Container maxWidth="md"></Container>
           </>
         )}
 

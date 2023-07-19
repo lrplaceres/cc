@@ -17,7 +17,7 @@ import {
 import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
-import { DataGrid, GridActionsCellItem, esES } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, esES, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -125,6 +125,7 @@ function index({ autorizos }) {
                   },
                 }}
                 pageSizeOptions={[25]}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>

@@ -18,7 +18,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import { useSession } from "next-auth/react";
-import { DataGrid, esES } from "@mui/x-data-grid";
+import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
 import GraficoCombustiblesAutorizados from "./GraficoCombustiblesAutorizados";
 import GraficoCombustiblesRedistribuidos from "./GraficoCombustiblesRedistribuidos";
 import GraficoCombustiblesDistribuidos from "./GraficoCombustiblesDistribuidos";
@@ -345,6 +345,7 @@ function VistaTablero({ entidadDefault }) {
                   }}
                   pageSizeOptions={[25]}
                   getRowId={(row) => row.nombre}
+                  slots={{ toolbar: GridToolbar }}
                 />
               </Card>
             </Grid>
@@ -373,6 +374,7 @@ function VistaTablero({ entidadDefault }) {
                   }}
                   pageSizeOptions={[25]}
                   getRowId={(row) => row.nombre}
+                  slots={{ toolbar: GridToolbar }}
                 />
               </Card>
             </Grid>
@@ -401,6 +403,7 @@ function VistaTablero({ entidadDefault }) {
                   }}
                   pageSizeOptions={[25]}
                   getRowId={(row) => row.nombre}
+                  slots={{ toolbar: GridToolbar }}
                 />
               </Card>
             </Grid>

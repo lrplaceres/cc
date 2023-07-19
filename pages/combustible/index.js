@@ -12,7 +12,7 @@ import Head from "next/head";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { DataGrid, esES } from "@mui/x-data-grid";
+import { DataGrid, esES, GridToolbar } from "@mui/x-data-grid";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
@@ -65,6 +65,7 @@ function index({ combustibles }) {
                   },
                 }}
                 pageSizeOptions={[25]}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>

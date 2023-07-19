@@ -11,7 +11,7 @@ import {
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { DataGrid, esES } from "@mui/x-data-grid";
+import { DataGrid, esES, GridToolbar  } from "@mui/x-data-grid";
 import axios from "axios";
 import Link from "next/link";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -81,6 +81,7 @@ function index({ usuarios }) {
                   },
                 }}
                 pageSizeOptions={[25]}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>

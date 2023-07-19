@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { DataGrid, esES } from "@mui/x-data-grid";
+import { DataGrid, esES, GridToolbar  } from "@mui/x-data-grid";
 import {
   Alert,
   Card,
@@ -218,6 +218,7 @@ function index({ entidadDefault }) {
                 }}
                 pageSizeOptions={[25]}
                 getRowId={(row) => row.nombre}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>
@@ -246,6 +247,7 @@ function index({ entidadDefault }) {
                 }}
                 pageSizeOptions={[25]}
                 getRowId={(row) => row.nombre}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>
@@ -274,6 +276,7 @@ function index({ entidadDefault }) {
                 }}
                 pageSizeOptions={[25]}
                 getRowId={(row) => row.nombre}
+                slots={{ toolbar: GridToolbar }}
               />
             </Card>
           </Container>
