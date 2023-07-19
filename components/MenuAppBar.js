@@ -130,7 +130,7 @@ export default function MenuAppBar() {
                   <PersonIcon />
                   <Typography textAlign="center">Perfil</Typography>
                 </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={()=>router.push("/usuario/contrasenna")}>
                   <KeyIcon />
                   <Typography textAlign="center">Contraseña</Typography>
                 </MenuItem>

@@ -5,12 +5,10 @@ import { getServerSession } from "next-auth/next";
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) {
     switch (req.method) {
       case "POST":
         return await obtenerUsuario(req, res);
     }
-  }
 
   res.status(401).json({ message: "403" });
   return;
