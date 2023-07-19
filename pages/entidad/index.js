@@ -7,6 +7,16 @@ import {
   SpeedDialIcon,
   Stack,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  ListItem,
+  ListItemText,
+  List,
+  Divider,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import Head from "next/head";
@@ -18,9 +28,32 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import Layout from "@/components/Layout";
+import { useState } from "react";
 
 function index({ entidades }) {
   const router = useRouter();
+
+  const [entidadesSubordinadas, setEntidadesSubordinadas] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setEntidadesSubordinadas([]);
+  };
+
+  const obtenerEntidadesSubordinadas = async (identidad) => {
+    try {
+      const { data } = await axios.post(`/api/entidad/subordinados/`, {
+        identidad,
+      });
+      setEntidadesSubordinadas(data);
+    } catch (error) {
+      toast.error("Ha ocurrido un error. Contacte al administrador");
+    }
+  };
 
   const columns = [
     {
@@ -48,7 +81,15 @@ function index({ entidades }) {
       headerName: "Subordinación",
       width: 150,
       renderCell: (params) => (
-        <Typography variant="body1" color="initial" component="p">
+        <Typography
+          variant="body1"
+          color="initial"
+          component="p"
+          onClick={() => {
+            obtenerEntidadesSubordinadas(params.row.id);
+            handleClickOpen();
+          }}
+        >
           {params.row.subordinacion ? <AccountTreeIcon /> : ""}
         </Typography>
       ),
@@ -63,7 +104,9 @@ function index({ entidades }) {
       <Layout>
         {entidades.length === 0 ? (
           <Stack sx={{ width: "100%" }} spacing={2}>
-            <Alert severity="info" variant="filled">No hay entidades disponibles</Alert>
+            <Alert severity="info" variant="filled">
+              No hay entidades disponibles
+            </Alert>
           </Stack>
         ) : (
           <Container maxWidth="md">
@@ -101,6 +144,42 @@ function index({ entidades }) {
           />
         </SpeedDial>
       </Layout>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+      >
+        <DialogTitle>Entidades subordinadas</DialogTitle>
+        <Divider />
+        <DialogContent>
+          {!!entidadesSubordinadas.length ? (
+            <>
+              <List dense>
+                {entidadesSubordinadas.map((e, index) => (
+                  <ListItem key={index.toString()}>
+                    <ListItemText primary={e.nombre} />
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          ) : (
+            <>
+              <Stack sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="info" variant="filled">
+                  Entidades no disponibles
+                </Alert>
+              </Stack>
+            </>
+          )}
+        </DialogContent>
+        <Divider />
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" variant="text">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
